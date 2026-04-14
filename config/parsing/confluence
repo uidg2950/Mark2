@@ -1,0 +1,24 @@
+# ******************************************************************************
+# *
+# *  (c) 2016-2021 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/confluence
+# *
+# *  Description:
+# *
+# ******************************************************************************
+ok /DEBUG:/
+ok /(?i)commit message:/
+
+warning /(?i)warning:/
+
+# Error sections
+error /(?i)error \d+/
+error /(?i)error:/
+error /(?i)http error/
+error /Cancelling nested steps due to timeout/
+error /RemoteDisconnected/

@@ -1,0 +1,27 @@
+# ******************************************************************************
+# *
+# *  (c) 2013-2015 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/nad_app_framework
+# *
+# *  Description:
+# *
+# *  Revision History:
+# *
+# *  CQ#    Author           Date          Description of Change(s)
+# *  -----  -------------    ----------    -------------------------------------
+# *         A. Quintero      08/28/2015    init version
+# *         A. Quintero      01/20/2016    add network verification
+# ******************************************************************************
+error /[1-9][0-9]* [Ee]rror[s]?/
+error /build_result=[1-9][0-9]*/
+error /Error [1-9][0-9]*/
+error /!! ERROR/
+error /Error occurred during build/
+error /Fatal error/
+error /error:/
+error /The network name cannot be found/

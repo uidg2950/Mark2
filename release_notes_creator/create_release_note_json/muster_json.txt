@@ -1,0 +1,186 @@
+{
+# This is the Conti part we deliver to Harman
+
+  "releasenote": {
+
+# Fixed Info for Cariad
+
+    "software_name_supplier": "ModemBSW (SWC / DK1)",
+    "software_part_number_vw": "887",
+    "software_name": "ModemBSW (SWC / DK1)",
+
+# Conti release version and delivery date of official release - from RRR protocol of RELEASE:
+
+    "sw_version": "conmod-sa515m-cl43-3.3.300.0",
+    "number_release_note": "CONMOD_5_G_Vcl43-03.03.300.00_CW23.03.1",
+    "version": "cl43-3.3.300.0",
+    "date": "2023-01-16",
+
+# In our release notes, we are reporting the list of changes (features and defects) with respect to the previous release.
+# From the "Corrected Defects" Jira query list, only the Defects with KPM numbers are relevant.
+# List the KPM numbers in an array, separated by comma.
+# !!! Cariad needs this without any blanks inbetween anywhere !!!
+
+    "list_changes_to_previous_release":[9099346,9194334,9110343],
+
+# Fixed list of evidences = this is the release docu we deliver
+# !!! Again no blanks inbetween anywhere - Cariad seems to have a great and robust SW evaluating this!!!
+
+    "list_supplied_evidences":["Release notes","NAD Test Report","Traceability Report"]
+  },
+
+
+  "kpis": {
+
+# Total number of SYSTEM requirements:
+# from ConMod Health Monitor:
+#   https://buic-dde.conti.de:5001/reports/conmod/
+# section "System and Software Requirements Traceability"
+#
+# "SyRD Requirements with Test Cases": pie chart showing
+# - total number of System Requirements
+# - SysReq covered / not covered by TCs
+# Absolute numbers can be seen by hovering over the pie chart.
+
+    "software_requirements": 410,
+    "software_requirements_test": 362,
+
+# Test Execution of SYSTEM Requirements:
+# Number of System requirements with "passed" or no test case executions for this release.
+# From same section of ConMod Health Monitor.
+#
+# "SyRD Requirement Verdict": pie chart showing the "latest" test result of TCs covering System Requirements.
+# As a SysReq ID can have more TCs linked to it, the following rule is defined for the verdict:
+#   "Sytem Requirement Test fail/pass"
+#   - Failed Highest Prio
+#   - Blocked second Prio
+#   - passed Third Prio
+#   - blank (not tested) last Prio
+#
+# I.e.
+# - if at least one TC linked to the Req is failed or blocked, the requirement is considered as "test failed".
+# - if at least one TC linked to the Req passed and there are no "failed" or "blocked", the requirement is considered as "test passed".
+# - if no TC linked to the Req has been executed, the requirement is considered as "without result".
+# Absolute numbers can be seen by hovering over the pie chart.
+# ==> "passed" status of pie chart
+
+    "software_requirements_fully_tested": 301,
+
+# Test Execution for this SW version
+# Number of "Failed" test case executions. Taken from test report of baseline on ConMod Sharepoint:
+#     https://mspe.conti.de/projects/DG-069615/default.aspx?RootFolder=%2Fprojects%2FDG%2D069615%2FWorking%20Folders%2F03%5FSYT%2F03%5FSYT%5FVV%5FTest%2F305%5FC%5FVVReports%2F20%5FInternal%20Reports&FolderCTID=0x0120001DADB7B26591F64EAD3AE9F1A4D4DC9E&View=%7B153FEBB1%2DFF2F%2D4AE0%2D9DB0%2D3927EC10170E%7D
+#       "VW-Audi_ConMod_NAD_Test_Results_Rel 3.aa.bb.cc.CWnn.1.xlsx"
+#       - first tab "Test Results Summary", status "Failed"
+
+    "software_tests_faulty": 0,
+
+# Number of Jira Defects entered for those failed test case executions.
+# Since we have a rule "Enter or identify a Jira Defect for each and every failed TC and document this in RQM",
+# we can be sure that we have a Defect for every failed TC.
+# ==> always enter the same number here...
+
+    "software_error_tickets": 0,
+
+# Total number of open Defects (not "closed")
+# From same test report on Sharepoint above.
+#     Tab "Open Defects" - Total
+
+    "open_tickets_total": 64,
+
+# In the "Open Defects" tab, filter for
+#    - status New
+#    - AND EMPTY assignee
+# The ASSIGNED tickets are the "other" ones, i.e.
+#     ASSINGED = TOTAL minus "new-and-no-assignee"
+
+    "tickets_assigned": 61,
+
+# Out of all the "open" tickets in the "Open Defects" tab:
+# A = prio Blocker or Critical
+# B = prio Major
+# C = prio Minor or Trivial
+
+    "tickets_a": 17,
+    "tickets_b": 32,
+    "tickets_c": 15,
+
+# System KPIs from the KPI Report at
+#    https://github-vni.geo.conti.de/vni-ConMod/sw.conmod.kpi.tracking
+#    -- sub-dir of baseline version, e.g. "03.03.278.00_NAND_RAM_CPU+Startup"
+#    -- xlsx Sheet, e.g. "ConMod_5G_NAD_KPI_Data-03.03.278.00__MB.xlsx".
+# The KPI report contains several tabs.
+#
+# In general, the meaning of / difference between
+# - (ressource)_available
+# - (ressource)_limit_release
+# is not clear and not defined by Cariad. For us, this is the same.
+# The "applicable" resource is also the limit that can be used.
+#
+# Tab "RAM+CPU - Application Processor"
+# - "applicable" is always 100%
+# - "limit_release" is always 100%
+# - "measure" is the CPU used by Conti SW processes
+#
+# Our rule is that Conti processes must only use max 50% CPU in "normal" / "idle" state, to leave resources for e.g. e.So.
+# RAM consumption is measured when startup is complete / modem is online. The formula for "CPU used by Conti" is
+#
+#   "100%" minus "free" minus "used by eso" minus "used by top command"
+
+    "ressource_cpu_applicable": "100%",
+    "ressource_cpu_limit_release": "100%",
+    "ressource_cpu_measure_release": "1%",
+
+# Tab "RAM - Split SoC Cores" - "Dynamic: Used APSS RAM"
+# ConMod NAD has a total of 1G RAM: 788 for Appl, 212 for Modem. Modem/QC is out of scope here.
+# - "applicable" is "Total APSS"
+# - "limit_release" is "Total APSS"
+# - "measure" is "Used APSS RAM"
+
+    "ressource_ram_applicable": "788,90 MB",
+    "ressource_ram_limit_release": "788,90 MB",
+    "ressource_ram_measure_release": "455,26 MB",
+
+# Since ConMod has no ROM, we will report the NAND Flash usage.
+# ConMod has a total of 1G NAND
+# - ~500 reserved for e.So appl
+# - ~450 for UBI0 (Unsorted Block Image)
+# - rest for other images, which do not change much in size
+# The flash part of interest is the UBI0 partition here.
+# This is the one that holds e.g. root file system, persistency and data. This is where headroom is important.
+#
+# Tab "Flash Usage - UBI0 Volume"
+# - "applicable" is "Total Size UBI0 partition"
+# - "limit_release" is "Total Size UBI0 partition"
+# - "measure" is "Used UBI0 Bytes: excluding "uarea""
+
+    "ressource_rom_applicable": "452,98 MB",
+    "ressource_rom_limit_release": "452,98 MB",
+    "ressource_rom_measure_release": "364,68 MB",
+
+# Static Code Check values
+# Taken from Static Code Check Values Reported to Customer - Results of Klocwork Static Code Analysis of RRR page.
+#
+# Figures are collected from Klockwork Insight
+#     https://dpas007x.dp.us.conti.de:8092/review/insight-review.html
+# Instructions how to get them see
+#     https://confluence.auto.continental.cloud/display/public/CMP/ConMod+Development+KPI+Data+and+Reports
+#
+# Klocwork findings, severity 1
+
+    "serious_difference": 0,
+
+# Klocwork findings, severity 2
+
+    "considerable_difference": 67,
+
+# Klocwork findings, severity 3
+
+    "marginal_difference": 171,
+
+# Klocwork findings, severity 4
+# Those we do not report, since we have more than 150000 of those.
+
+    "no_or_slight_difference": "no figures collected"
+
+  }
+}

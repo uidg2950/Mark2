@@ -1,0 +1,37 @@
+# ******************************************************************************
+# *
+# *  (c) 2013-2015 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/test
+# *
+# *  Description:
+# *
+# *  Revision History:
+# *
+# *  CQ#    Author           Date          Description of Change(s)
+# *  -----  -------------    ----------    -------------------------------------
+# *         A. Quintero      03/19/2015    init version
+# *         A. Quintero      11/16/2015    adding unhandled exception
+# *         A. Quintero      11/18/2015    error while flashing
+# *         A. Quintero      11/19/2015    remove timeout from errors
+# ******************************************************************************
+#Exclude
+ok /Unhandled Exception: System.Runtime.InteropServices.SEHException: External component has thrown an exception./
+
+error /(?i)ERRORLEVEL=[1-9][0-9]*/
+error /(?i)\bFATAL\b/
+error /(?i)\bOOPS\b/
+error /(?i)\bPANIC\b/
+error /ATP is already running/
+error /Neither fastboot nor adb are available for current board/
+error /Unable to configure board/
+error /Unhandled Exception/
+error /is not a valid COM port or not a valid alias/
+error /Image path does not exist:/
+
+# match lines that indicate warnings
+warning /(?i)\bWARNING\b/

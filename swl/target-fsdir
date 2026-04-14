@@ -1,0 +1,48 @@
+#!/bin/bash
+#########################################################
+## Copyright (c) 2016-2018 Continental AG and subsidiaries
+## @file
+## @author Julian Garcia
+## @date 14-May-2018
+## @brief Create the targetfs dir required for FW SDK + HAL.
+## @details Overview:
+##   1) list the files that should be in the targetfs dir.
+##   2) Create targetfs directory.
+##   3) Copy the files with folder structure.
+##
+#########################################################
+
+# Variables
+sdk_dir=$(dirname $(readlink -f $(basename $0)))
+targetfs="${sdk_dir}/targetfs/"
+
+# 1) List of Files
+# FIXME: Improvement required in the regex for search
+grep '|file|.*|no|' "${sdk_dir}/file_manifest.csv" | grep -v '|file||no|' | cut -d "|" -f3 > "${sdk_dir}/prodfs.files"
+
+# 2)targetfs directory.
+if [ -d ${targetfs} ]; then
+    rm -rf ${targetfs}/*
+else
+    mkdir ${targetfs}
+fi
+
+# 3) Populate targetfs.
+echo "Populating targetfs directory..."
+for fd in $(cat ${sdk_dir}/prodfs.files); do
+    in_root=$(echo ${fd} | grep -oc "/")            # file to be place in root
+    f=$(echo ${fd} | rev | cut -d "/" -f1 | rev)    # file
+    d=$(echo ${fd} | rev | cut -d "/" -f2- | rev)   # directory
+    echo -ne "File=${f} - Directory=${d}\r"
+    # Check if the file should be placed in / (root)
+    if [[ ${f} == ${d} ]] && [[ ${in_root} -eq 0 ]] ;then
+       cp -a "${sdk_dir}/${fd}" "${targetfs}" 2>/dev/null
+       echo -ne "cp -a ${fd} ${targetfs}\r"
+    else
+       # Create the folder structure & copy the file.
+       [[ -d ${targetfs}/${d} ]] || mkdir -p "${targetfs}/${d}" && cp -a "${sdk_dir}/${fd}" "${targetfs}/${d}" 2>/dev/null
+       echo -ne "cp -a ${f} ${targetfs}/$d\r"
+     fi
+done
+echo
+echo "Ready!"

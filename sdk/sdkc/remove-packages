@@ -1,0 +1,63 @@
+#!/bin/bash
+#########################################################
+## Copyright (c) 2016-2019 Continental AG and subsidiaries
+## @file
+## @author Julian Garcia
+## @date 13-Jun-2019
+## @brief Remove packages from the final target.
+## @details Overview:
+##   1) If there are no arguments, all the possible
+##      packages to be removed will be listed.
+##   2) Make a backup of the original manifest file.
+##   3) In the manifest file, the packages chosen will be
+##      removed.
+##   4) This configuration will be saved for the next SDK
+##      installation.
+##
+#########################################################
+
+# Variables
+file_manifest="file_manifest.csv"
+packages=($@)
+options=($(awk -F"|" '{print $1}' "${CAS_TARGETFS}"/"${file_manifest}"  | sort -u))
+
+# 1) List of installed package
+if [[ ${#packages[@]} -eq 0 ]]; then
+    echo "****No packages were listed to be removed****"
+    echo -e "Possible packages to be removed:\n ${options[@]}"
+    exit 1
+fi
+
+# 1.1) Verification of the name of the packages to be removed
+for pckg in "${packages[@]}"; do
+    pckg_available=$(echo "${options[@]}" | grep -P "(^|\s)\K${pckg}(?=\s|$)")
+    [[ -z "${pckg_available}" ]] && echo "${pckg} is not part of package options" && exit
+done
+
+
+# Modification of ${file_manifest}
+pushd "${CAS_TARGETFS}" > /dev/null
+
+# 2) Backup of the original manifest file
+cp "${file_manifest}" "${file_manifest}.orig"
+
+# 3) Removing chosen packages
+for pckg in "${packages[@]}"; do
+    echo "Removing $pckg from the installation list"
+    sed -i '/'${pckg}'/d' "${file_manifest}"
+    RET_CODE=$((RET_CODE + $?))
+done
+
+# 3.1) Catching possible errors
+if [ ${RET_CODE} -ne 0 ]; then
+    echo -e "Some errors were detected during removing the packages.\n Please try again."
+    # Reset of manifest file
+    cp "${file_manifest}.orig" "${file_manifest}"
+    rm -rf "${file_manifest}.orig"
+else
+    # 4) Configuration saved for the next SDK execution.
+    echo "Resume..."
+    diff -U3 "${file_manifest}.orig" "${file_manifest}"
+    echo "The installation list was modified succesfully!!!"
+fi
+popd

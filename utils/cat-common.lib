@@ -1,0 +1,108 @@
+#!/bin/bash
+# ***************************************************************************************
+# *   Copyright (c) 2023 Continental Automotive Systems, Inc., all rights reserved
+# *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *   Any reproduction of this material without written consent from
+# *   Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *   Filename: cat-common.lib
+# *
+# *   Description: General purpose functions for CAT delivery
+# *
+# *
+# ***************************************************************************************
+
+check_empty_param() {
+    param_not_empty="$1"
+    # check if there is a parameter at all...
+    [[ x"$param_not_empty" =~ x-.* ]] && echo "" || echo "$param_not_empty"
+}
+
+process_cli_parameters() {
+    # Verify the shell is set to bash
+    if [[ ! $(readlink "$(which sh)") =~ bash ]]; then
+      echo ""
+      echo "### ERROR: Please Change your /bin/sh symlink to point to bash. ### "
+      echo "### sudo ln -sf /bin/bash /bin/sh ### "
+      echo ""
+      exit 1
+    fi
+
+    if [ $# -eq 0 ]; then
+        help_info
+        exit 1
+    fi
+
+    while [ $# -gt 0 ]; do
+        param="$1"
+        shift
+        # skip '' parameters...
+        [ x"$1" = x ] && shift
+        case $param in
+            -w|--workspace)
+                WORKSPACE=$(check_empty_param "$1")
+                [[ x"$WORKSPACE" == x ]] || shift
+                ;;
+            -o|--output-dir)			# This needs to be generated
+                OUTPUT_DIR=$(check_empty_param "$1")
+                [[ x"$OUTPUT_DIR" == x ]] || shift
+                ;;
+            -c|--cas-arch)
+                CAS_ARCH=$(check_empty_param "$1")
+                [[ x"$CAS_ARCH" == x ]] || shift
+                ;;
+            -p|--project)                       # otp
+                PROJECT=$(check_empty_param "$1")
+                [[ x"$PROJECT" == x ]] || shift
+                ;;
+            -h|--cas-hw)                        # sa515m
+                CAS_TARGET_HW=$(check_empty_param "$1")
+                [[ x"$CAS_TARGET_HW" == x ]] || shift
+                ;;
+            -b|--release_id)                  # thick-3.y
+                RELEASE_ID=$(check_empty_param "$1")
+                [[ x"$RELEASE_ID" == x ]] || shift
+                ;;
+            -r|--release)                       # otp-sa515m-thick-3.1.8.3.3
+                BASELINE_VERSION=$(check_empty_param "$1")
+                [[ x"$BASELINE_VERSION" == x ]] || shift
+                ;;
+            -dt|--delivery-type)
+                DELIVERY_TYPE=$(check_empty_param "$1")
+                [[ x"$DELIVERY_TYPE" == x ]] || shift
+                ;;
+            -am|--additional-metafiles)              # list with additional metafiles for delivery
+                ADDITIONAL_METAFILES=$(check_empty_param "$1")
+                [[ x"$ADDITIONAL_METAFILES" == x ]] || shift
+                ;;
+            -rrr|--rrr-confluence-link)
+                RRR_CONFLUENCE_LINK=$(check_empty_param "$1")
+                [[ x"$RRR_CONFLUENCE_LINK" == x ]] || shift
+                ;;
+            -tp|--test-plan-id)
+                TEST_PLAN_ID=$(check_empty_param "$1")
+                [[ x"$TEST_PLAN_ID" == x ]] || shift
+                ;;
+            -wu|--windows-user)
+                WIN_USER=$(check_empty_param "$1")
+                [[ x"$WIN_USER" == x ]] || shift
+                ;;
+            -wp|--windows-pw)
+                WIN_PW=$(check_empty_param "$1")
+                [[ x"$WIN_PW" == x ]] || shift
+                ;;
+            -ku|--klocwork-user)
+                KLOCWORK_USER=$(check_empty_param "$1")
+                [[ x"$KLOCWORK_USER" == x ]] || shift
+                ;;
+            -kp|--klocwork-pw)
+                KLOCWORK_PW=$(check_empty_param "$1")
+                [[ x"$KLOCWORK_PW" == x ]] || shift
+                ;;
+            *)
+                bail "Invalid parameter: $param.\nUse -h|--help for more information."
+                ;;
+        esac
+    done
+}
+

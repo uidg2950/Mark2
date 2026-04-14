@@ -1,0 +1,64 @@
+[
+  {
+    "block_name": "General_Conti_Block",
+    "content": [
+      {"abl.elf": "abl"},
+      {"aop.mbn": "aop"},
+      {"boot.img": "boot"},
+      {"devcfg.mbn": "tz_devcfg"},
+      {"hyp.mbn": "qhee"},
+      {"multi_image.mbn": "multi_image"},
+      {"sbl1.mbn": "sbl"},
+      {"tz.mbn": "tz"},
+      {"uefi.elf": "uefi"},
+      {"tp-pers-install.tar.gz": ""},
+      {"system.ubifs": "system"},
+      {"dsp2.ubifs": "dsp2"}
+    ]
+  },
+  {
+    "block_name": "General_Conti_Block_without_system",
+    "content": [
+      {"abl.elf": "abl"},
+      {"aop.mbn": "aop"},
+      {"boot.img": "boot"},
+      {"devcfg.mbn": "tz_devcfg"},
+      {"hyp.mbn": "qhee"},
+      {"multi_image.mbn": "multi_image"},
+      {"sbl1.mbn": "sbl"},
+      {"tz.mbn": "tz"},
+      {"uefi.elf": "uefi"},
+      {"tp-pers-install.tar.gz": ""},
+      {"dsp2.ubifs": "dsp2"}
+    ]
+  },
+  {
+    "block_name": "MCFG_Conti_Block",
+    "content": [
+    {"tp_modem_config_list.tar.gz": [
+       "mcfg_hw_FE515_LE_SS.mbn",
+       "mcfg_sw_Vodafone_VoLTE_Turkey.mbn",
+       "mcfg_sw_Vodafone_VoLTE_Germany.mbn",
+       "mcfg_sw_Vodafone_M2M_Commercial_Global.mbn",
+       "mcfg_sw_Verizon_CDMAless.mbn",
+       "mcfg_sw_Telstra_Commercial.mbn",
+       "mcfg_sw_Rogers_Commercial_CA.mbn",
+       "mcfg_sw_ROW_Commercial.mbn",
+       "mcfg_sw_MTS_Commercial_RU.mbn",
+       "mcfg_sw_KT_Commercial_KT_LTE.mbn",
+       "mcfg_sw_Etisalat_VoLTE.mbn",
+       "mcfg_sw_DT_VoLTE_Commercial.mbn",
+       "mcfg_sw_DCM_Commercial.mbn",
+       "mcfg_sw_Cubic_VoLTE.mbn",
+       "mcfg_sw_Cubic_Korea_VoLTE.mbn",
+       "mcfg_sw_CU_Commercial_VoLTE.mbn",
+       "mcfg_sw_CMCC_Commercial_Volte_OpenMkt.mbn",
+       "mcfg_sw_Brazil_Commercial.mbn",
+       "mcfg_sw_ATT_VoLTE.mbn",
+       "mcfg_sw_AMX_Commercial_MX.mbn",
+       "mcfg_sw_STC_Commercial_SA.mbn"
+      ]
+     }
+    ]
+  }
+]

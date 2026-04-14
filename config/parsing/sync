@@ -1,0 +1,5 @@
+ok /(?i)commit message:/
+error /already exists/
+error /fatal:/
+error /prohibited by Gerrit/
+error /rejected/

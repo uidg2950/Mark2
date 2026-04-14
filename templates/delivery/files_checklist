@@ -1,0 +1,24 @@
+#!/bin/bash
+# ******************************************************************************
+# *   Copyright (c) 2020 Continental Automotive Systems, Inc., all rights reserved
+# *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *   Any reproduction of this material without written consent from
+# *   Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *   Filename: files_checklist
+# *
+# *   Description: Files required for the ConMod Package Delivery
+# *
+# ******************************************************************************
+
+# Files to be included into the delivery
+tar_files=(
+    'kernel_amend.tar.gz'
+    'msm-4.14_archive_created.tar.gz'
+)
+
+# Metafiles to be included into the delivery
+metafiles=(
+    'target.json'
+    'delivery.json'
+)

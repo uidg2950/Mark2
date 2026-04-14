@@ -1,0 +1,14 @@
+export bld_top_dir=${CAS_WORKDIR}
+export bld_log_id="log"
+export bld_build_dir=${CAS_WORKDIR}/.build
+export bld_buildsys_dir=${CAS_WORKDIR}/tools/build
+export bld_common_inc=${CAS_WORKDIR}/package/specs
+export bld_conti_inc=${CAS_WORKDIR}/package/specs/conti
+export bld_script_dir=${bld_buildsys_dir}/scripts
+export bld_log_dir=${CAS_WORKDIR}/logs
+export bld_proj_cfg=${CAS_WORKDIR}/.build/config
+export bld_proj_pkg_cfg=${CAS_WORKDIR}/.build/config/pkgcfg
+export bld_proj_scripts=${CAS_WORKDIR}/.build/scripts
+export bld_error=
+export bld_layers="${CAS_WORKDIR}/layers/project"
+export bld_layers_sorted="${CAS_WORKDIR}/layers/project"

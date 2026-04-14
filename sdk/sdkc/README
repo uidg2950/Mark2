@@ -1,0 +1,57 @@
+File list                                         Description 
+------------                                      ------------------------------
+.
+├── .build
+│   ├── env-buildsys-static
+│   ├── env-common
+│   └── env-target
+├── .launchers
+│   └── linux
+│       └── sdk
+│           ├── install-prodfs-sdk               # Entry point to generate images once all packages decompressed
+│           └── README                           # This README :)
+├── project
+│   └── mdm9x28
+│       ├── config
+│       │   ├── flash_all_via_qpst.xml
+│       │   └── secbootcfg/*
+│       └── scripts
+│           ├── conti_sign_adapter.py
+│           ├── create-image
+│           ├── device_table.txt
+│           └── __init__.py
+├── release
+│   ├── fs
+│   │   ├── devel/                                # Untar of sdk.tar.gz (The complete one, from official release)
+│   │   └── host -> ../../release-host/fs/host
+│   └── images
+│       └── devel/                                # 2K folder will be placed with the images creation.
+├── release-host/
+│    └── fs
+│        └── host                                 # Untar of otp-host.tar.gz tar file
+├── release-toolchain/
+│    └── fs
+│        └── devel                                # Untar of toolchain.tar.gz file
+├── .repo
+│   └── manifests
+│       └── env-plf-config
+├── sdk-constructor.tar.gz
+└── tools
+    └── build
+        └── scripts/*
+
+Execution
+------------
+Once this sdk-constructor.tar.gz file had been unpacked take into account the following
+steps in order to create prodfs folder and image creation.
+
+1. Untar toolchain.tar.gz in the directory indicated above.
+2. Untar otp-host.tar.gz tar tar file in the directory indicated above.
+3. Untar sdk.tar.gz in the directory indicated above.
+4. Once in the top directory, execute "bash .launchers/linux/sdk/install-prodfs-sdk"
+    This will execute the following:
+        *Source all environment variables (env-plf-config, env-buildsys-static, env-common, env-static).
+        *"prodfs" folder will be created in .build
+        *"2K" folder will be created in release/images/devel
+        *"log" folder will be populated
+5. You will find the images created in release/images/devel/2K/

@@ -1,0 +1,109 @@
+#!/bin/bash
+# ******************************************************************************
+# *   Copyright (c) 2018-2021 Continental Automotive Systems, Inc., all rights reserved
+# *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *   Any reproduction of this material without written consent from
+# *   Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *   Filename: file-list-sdkc
+# *
+# *   Description: Holds the directory structure and file contents required for the
+# *                constructor wrapper.
+# ******************************************************************************
+
+# Files to be included into the delivery
+file_list_sdkc=(
+    'sa515m_fuseblower_USER.xml'
+    'README'
+    '__init__.py'
+    'audit-permissions'
+    'bootloaderCerts'
+    'config-platform-permissions'
+    'config.xml'
+    'conti-dev_attest_fs.cer'
+    'conti-dev_attest_fs.key'
+    'conti-dev_attest_kernel.cer'
+    'conti-dev_attest_kernel.key'
+    'conti-dev_attestca.cer'
+    'conti-dev_attestca.key'
+    'conti-dev_rootca.cer'
+    'conti-dev_rootca.key'
+    'conti_sign_adapter.py'
+    'create-image'
+    'device_table.txt'
+    'env-buildsys-static'
+    'env-common'
+    'env-plf-config'
+    'env-target'
+    'factory-reset.sh'
+    'flash_all_via_qpst.xml'
+    'flashing_script.py'
+    'getConModNADinfo.bat'
+    'image_sign_override.config'
+    'install-prodfs'
+    'install-prodfs-sdk'
+    'installTestPartition.py'
+    'kpi_config.xml'
+    'oem_attest_fs.key'
+    'oem_attest_kernel.key'
+    'oem_fs_certificate.h'
+    'oem_kernel_certificate.h'
+    'package-info.txt'
+    'pers-xml-combiner.py'
+    'persistence_config_factory.xml'
+    'print-package'
+    'mcfg_versions_list.py'
+    'metrics-pkg-size'
+    'remove-packages'
+    'remove_files_from_image.sh'
+    'resize_system.py'
+    'secboot-image-sign'
+    'set-cust-ta-sign-env'
+    'strip-compress-files'
+    'sdx55_debugpolicy.xml'
+    'swdl_blocks.json'
+    'uuu.auto.conf'
+    'validate_image_size.py'
+    'xqcn_mcfg_versions.txt'
+    # Build system helpers
+    'misc/bootstrap'
+    'misc/log'
+    'misc/package'
+    'misc/rpm'
+    'diag_logger_example.pl'
+    'on_device_logging_mask.cfg'
+    'qxdm_logging.ini'
+    'target_logging_setup.py'
+)
+
+# Empty directories to be created
+dir_list_sdkc=(
+    'release/fs/devel'
+    'release/fs/host'
+    'release/docs'
+    'release/images/devel'
+    'release-toolchain/fs/devel'
+    'release-host/fs/host'
+    '.build/lock'
+    'logs'
+    'logs/host'
+)
+
+# Search paths for file_list_sdkc
+dir_list_search_priorities=(
+    '.build/scripts'
+    './project'
+    '../.launchers/conmod-cm/utils'
+    '../.launchers/linux/sdk'
+    './tools/build/scripts'
+    './tools/platform'
+    '.repo'
+    '.build'
+    '.'
+)
+
+# Dirs for signing capabilities
+dirs_for_signature_sdkc=(
+    '.build/config/secbootcfg'
+    '.build/scripts/otc'
+)

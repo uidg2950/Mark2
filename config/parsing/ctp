@@ -1,0 +1,95 @@
+# ******************************************************************************
+# *
+# *  (c) 2016 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/subaru
+# *
+# *  Description:
+# *
+# ******************************************************************************
+# OK
+ok /(?i)error [1-9]?[0-9]+ \(ignored\)/
+ok /(?i)fprintf.*failed to/
+ok /(?i)verbose errors:/
+ok /(?i)warning: multiple kernel versions detected under/
+ok /(?i)warning: overwriting stash/
+ok /(?i)commit message:/
+ok /(?i)error: pathspec '\*.xqcn' did not match any file\(s\) known to git\./
+# DRT exclusion
+ok /(?i)exec format error/
+
+# INFO
+info /\(BLD\)/
+info /\(TST\)/
+info /\(MDM\)/
+info /\(VC\)/
+info /\(SDK\)/
+info /\(UP\)/
+info /\(KW\)/
+info /\(BE\)/
+info /\(BP\)/
+info /\(DP\)/
+info /\(MET\)/
+
+# WARNING
+warning /bad substitution/
+warning /(?i)warning:/
+warning /ignored/
+
+# ERROR
+error /(?i)aborted/
+error /(?i)ambiguous redirect/
+error /(?i)binary operator expected/
+error /(?i)cannot create directory/
+error /(?i)cannot execute binary file/
+error /(?i)cannot open shared object file/
+error /(?i)connection refused/
+error /(?i)could not connect to/
+# DRT exclusion
+# error /(?i)cp: cannot stat/
+error /(?i)directory not empty/
+error /(?i)error [1-9]?[0-9]+$/
+error /(?i)error in file io/
+error /(?i)error occurred during build/
+error /(?i)error while loading shared libraries/
+error /(?i)error: cannot fetch/
+error /(?i)error:/
+error /(?i)errors:/
+error /(?i)exception:/
+error /(?i)exiting with failure status due to previous errors/
+error /(?i)failed to/
+error /(?i)fatal:/
+error /(?i)file read error:/
+error /(?i)illegal number of parameters/
+error /(?i)indexerror: list index out of range/
+error /(?i)installing package.*needs/
+error /(?i)is incompatible with/
+error /(?i)license check failed/
+# DRT exclusion
+#error /(?i)mv: cannot stat/
+error /(?i)no keytool application found/
+error /(?i)no rule to make target/
+error /(?i)no space left on device/
+error /(?i)permission denied/
+error /(?i)recipe for target.*failed/
+error /(?i)rejected/
+error /(?i)ret_code=[1-9][0-9]*$/
+error /(?i)returned [1-9][0-9]* exit status/
+error /(?i)rsync error:/
+error /(?i)rsync:.*file exists/
+error /(?i)target-all failed/
+error /(?i)unable to access license server/
+error /(?i)unable to acquire lock/
+error /(?i)undefined reference to/
+error /(?i)unhandled exception/
+error /(?i)unknown command/
+error /(?i)valueerror/
+error /(?i)waiting for unfinished jobs/
+
+# KW errors
+error /Traceback \(most recent call last\):/
+error /http.client.BadStatusLine/

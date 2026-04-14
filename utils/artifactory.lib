@@ -1,0 +1,360 @@
+#!/usr/bin/env bash
+# ******************************************************************************
+# *
+# *  (c) 2022-2024 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename: artifactory.lib
+# *
+# *  Description: Handles operations with Artifactory.
+# *               This file came from telematics-cm
+# *
+# *****************************************************************************
+
+# Globals
+ARTIFACTORY_SERVER='https://us.artifactory.automotive.cloud/artifactory'
+ARTIFACTORY_USER='uidg4627'
+CREDENTIALS_FILE="$HOME/.credentials/artifactory"
+REPOSITORY='vni_otp_generic_l'
+
+# Functions
+read_artifactory_credentials(){
+    local token     # API Key
+
+    if [[ -r "${CREDENTIALS_FILE}" ]]; then
+        token=$(grep "${ARTIFACTORY_USER}" "${CREDENTIALS_FILE}")
+    else
+        return 1
+    fi
+
+    # This toke follows the format:  ${USER}:${API_TOKEN}
+    echo "${token}"
+}
+
+# Get metadata of ONE file from artifactory
+get_metainfo(){
+    local release_id=${1?release_id is required}
+    local baseline=${2?baseline is required}
+    local file=${3?file is required}
+    local token=$(read_artifactory_credentials)
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/api/storage/${REPOSITORY}/${release_id}/${baseline}"
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    echo "curl -u 'TOKEN' -X GET '${artifactory_url}/${file}'"
+    artifactory_metadata=$(curl -u "${token}" -X GET "${artifactory_url}/${file}")
+
+    return "$?"
+}
+
+# tests a full artifacory url path for existence
+# returns 0 if path/file exist, 1 otherwise
+artifactory_path_exists(){
+    local url_to_test=${1?url_to_test is required}
+    path_exists=0
+    local token=$(read_artifactory_credentials)
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    echo "curl -u 'TOKEN' -X GET '${url_to_test}'"
+    artifactory_metadata=$(curl -u "${token}" -X GET "${url_to_test}")
+    # debug only
+    #echo "$artifactory_metadata"
+    if [[ $artifactory_metadata == *"File not found"* ]] || [[ $artifactory_metadata == *"does not exist"* ]]; then
+        path_exists=1
+    fi
+
+    return $path_exists
+}
+
+# creates a new folder inside artfactory. The following checks are done:
+# - checks if the folder path already exists (nothing done if yes)
+# - checks if there's only one folder level given (parent exists). Only one folder level creation is allowed with one call
+# returns 0 if the folder already exists or was successfully created, 1 otherwise
+create_folder(){
+    local url_new_folder=${1?url_new_folder is required}
+    local dry_run=${2}
+    folder_exists=0
+    local token=$(read_artifactory_credentials)
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    # creating a folder required '/' at the end of the folder path!
+    last_char="${url_new_folder: -1}"
+    [[ "${last_char}" != "/" ]] && url_new_folder="${url_new_folder}/"
+
+    # check if folder exists
+    artifactory_path_exists "${url_new_folder}"
+    ret=$?
+    [ $ret -eq 0 ] && echo "Folder ${url_new_folder} already exist, nothing to do!" && return 0
+    [ $ret -ne 1 ] && echo "Error checking for folder ${url_new_folder}: Errorcode: ${ret}" && exit 1
+
+    # check if parent folder exists
+    url_parent_folder="${url_new_folder%/*/}/"
+    artifactory_path_exists "${url_parent_folder}"
+    ret=$?
+    [ $ret -eq 1 ] && echo "Parent folder ${url_parent_folder} does not exist, can't create new folder!" && exit 1
+    [ $ret -ne 0 ] && echo "Error checking for parent ${url_parent_folder}: Errorcode: ${ret}" && exit 1
+
+    # so '0' was returned, that means the parent exists, and we can create the new subfolder...
+    echo "curl -s -X PUT ${url_new_folder}"
+    if [[ -z "${dry_run}" ]]; then
+        curl -s -u "${token}" -X PUT "${url_new_folder}"
+        [ $? -ne 0 ] && echo "Curl error while creating folder ${url_new_folder}!" && exit 1
+    fi
+    return 0
+}
+
+upload_artifacts(){
+    local workspace=${1?workspace is required}
+    local release_id=${2?release_id is required}
+    local baseline=${3?baseline is required}
+    local files=${4?files is required}
+    local dry_run=${5}
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/${REPOSITORY}/${release_id}/${baseline}"
+    echo "Upload to: ${artifactory_url}. list of files[${files}]"
+    # Control flow
+    local ret_code          # Overall return code for the function
+    local curl_ret_code     # Internal return code for the retry strategy
+    local max_retries       # Number of curl retries
+    local retry_number      # Counter for the retries
+
+    # Settings
+    ret_code=0
+    max_retries=3
+
+    # Action
+    token=$(read_artifactory_credentials)
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    pushd "${workspace}"
+        files=(${files})
+        for file in "${files[@]}"; do
+            if [[ -e "${file}" && -s "${file}" ]]; then
+                echo "${dry_run:+[DRY RUN] } curl -s -X PUT ${artifactory_url}/${file} -T ${workspace}/${file}"
+
+                if [[ -z "${dry_run}" ]]; then
+                    retry_number=0
+                    curl_ret_code=1
+                    while [[ "${curl_ret_code}" -gt 0 && "${retry_number}" -le "${max_retries}" ]]; do
+                        curl -s -u "${token}" -X PUT "${artifactory_url}/${file}" -T "${workspace}/${file}"
+                        curl_ret_code=$?
+                        retry_number=$((retry_number + 1))
+                    done
+
+                    # Report the last execution
+                    ret_code=$((ret_code + curl_ret_code))
+                fi
+            else
+              echo "File: ${file} not found"
+            fi
+        done
+    popd
+
+    return "${ret_code}"
+}
+
+download_artifacts(){
+    local workspace=${1?workspace is required}
+    local release_id=${2?release_id is required}
+    local baseline=${3?baseline is required}
+    local files=${4?files is required}
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/${REPOSITORY}/${release_id}/${baseline}"
+
+    # Settings
+    ret_code=0
+    max_retries=3
+
+    # Action
+    token=$(read_artifactory_credentials)
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    pushd "${workspace}"
+        for file in "${files[@]}"; do
+            echo "curl -u 'TOKEN' -O '${artifactory_url}/${file}'"
+            curl -u "${token}" -O "${artifactory_url}/${file}"
+        done
+    popd
+
+    return "$?"
+}
+
+# get all subfolders in the given item path
+# caution: this method cannot have any 'echo' commands as all output would be returned!
+get_subfolder_list() {
+    local release_id=${1?release_id is required}
+    local item_path=${2?item_path is required}
+    local token=$(read_artifactory_credentials)
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/api/storage/${REPOSITORY}/${release_id}/${item_path}"
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    #echo "curl -u 'TOKEN' -X GET '${artifactory_url}' | python3 -c 'import sys, json; print(len(json.load(sys.stdin)['children']))'"
+
+    # get the content of the folder as json, then extract from it's children the folder names and convert them to a space separated string..
+    dir_list=$(curl -u "${token}" -X GET "${artifactory_url}" 2>/dev/null | \
+            python3 -c 'import sys, json; all_content=json.load(sys.stdin)["children"]; \
+dir_list=[child["uri"][1:] for child in all_content if child["folder"]==True]; \
+print(" ".join(map(str, dir_list)));')
+
+    echo "$dir_list"
+}
+
+get_number_of_files() {
+    local release_id=${1?release_id is required}
+    local item_path=${2?item_path is required}
+    local workspace=${3?workspace is required}
+    local token=$(read_artifactory_credentials)
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/api/storage/${REPOSITORY}/${release_id}/${item_path}"
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    echo "curl -u 'TOKEN' -X GET '${artifactory_url}' | python3 -c 'import sys, json; print(len(json.load(sys.stdin)['children']))'"
+
+    file_count=$(curl -u "${token}" -X GET "${artifactory_url}" | python3 -c "import sys, json; print(len(json.load(sys.stdin)['children']))")
+
+    return "$?"
+}
+
+# Download metadata and FIRST file from artifactory
+download_first_in_folder(){
+    local release_id=${1?release_id is required}
+    local item_path=${2?item_path is required}
+    local workspace=${3?workspace is required}
+    local token=$(read_artifactory_credentials)
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/api/storage/${REPOSITORY}/${release_id}/${item_path}"
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    echo "curl -u 'TOKEN' -X GET '${artifactory_url}' | python3 -c 'import sys, json; print(json.load(sys.stdin)['children'][0]['uri'])'"
+    file_uri=$(curl -u "${token}" -X GET "${artifactory_url}" | python3 -c "import sys, json; print(json.load(sys.stdin)['children'][0]['uri'])")
+
+    artifactory_url="${ARTIFACTORY_SERVER}/${REPOSITORY}/${release_id}/${item_path}/${file_uri}"
+    pushd "${workspace}"
+      echo "curl -u 'TOKEN' -O '${artifactory_url}'"
+      curl -u "${token}" -O "${artifactory_url}"
+    popd
+
+    return "$?"
+}
+
+# Get metadata of ONE file from artifactory
+download_n_in_folder(){
+    local release_id=${1?release_id is required}
+    local item_path=${2?item_path is required}
+    local workspace=${3?workspace is required}
+    local index=${4?index is required}
+    local token=$(read_artifactory_credentials)
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/api/storage/${REPOSITORY}/${release_id}/${item_path}"
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    get_number_of_files ${release_id} ${item_path} ${workspace}
+
+    if [[ ${index} -ge ${file_count} ]]; then
+      echo "Index out of bound"
+      return 14
+    fi
+
+    echo "curl -u 'TOKEN' -X GET '${artifactory_url}' | python3 -c 'import sys, json; print(json.load(sys.stdin)['children'][${index}]['uri'])'"
+    file_uri=$(curl -u "${token}" -X GET "${artifactory_url}" | python3 -c "import sys, json; print(json.load(sys.stdin)['children'][${index}]['uri'])")
+
+    artifactory_url="${ARTIFACTORY_SERVER}/${REPOSITORY}/${release_id}/${item_path}/${file_uri}"
+    pushd "${workspace}"
+      echo "curl -u 'TOKEN' -O '${artifactory_url}'"
+      curl -u "${token}" -O "${artifactory_url}"
+    popd
+
+    return "$?"
+}
+
+
+delete_artifact() {
+    local workspace=${1?workspace is required}
+    local release_id=${2?release_id is required}
+    local baseline=${3?baseline is required}
+    local files=${4?files is required}
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/${REPOSITORY}/${release_id}/${baseline}"
+
+        # Settings
+    ret_code=0
+    max_retries=3
+
+    # Action
+    token=$(read_artifactory_credentials)
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    pushd "${workspace}"
+        for file in "${files[@]}"; do
+            echo "curl -u 'TOKEN' -X DELETE '${artifactory_url}/${file}'"
+            curl -u "${token}" -X DELETE "${artifactory_url}/${file}"
+        done
+    popd
+
+    return "$?"
+}
+
+# Copy one item inside artifactory
+copy_artifact(){
+    local release_id_source=${1?release_id_source is required}
+    local source_file=${2?source_file is required}
+    local release_id_destination=${3?release_id_destination is required}
+    local destination_file=${4?destination_file is required}
+    local token=$(read_artifactory_credentials)
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/api/copy/${REPOSITORY}/${release_id_source}/${source_file}?to=/${REPOSITORY}/${release_id_destination}/${destination_file}"
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    echo "curl -u 'TOKEN' -X POST '${artifactory_url}'"
+    artifactory_metadata=$(curl -u "${token}" -X POST "${artifactory_url}")
+    echo "${artifactory_metadata}"
+    return "$?"
+}

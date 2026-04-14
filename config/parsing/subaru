@@ -1,0 +1,134 @@
+# ******************************************************************************
+# *
+# *  (c) 2016-2021 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/subaru
+# *
+# *  Description: Parser rules for Jenkins Plugin
+# *
+# ******************************************************************************
+# OK
+ok /sh: line 1:\s+\d+ Terminated/
+ok /(?i)commit message:/
+ok /(?i)error [1-9]?[0-9]+ \(ignored\)/
+ok /(?i)fatal: invalid revision range/
+ok /(?i)fprintf.*failed to/
+ok /(?i)head is now at/
+ok /(?i)verbose errors:/
+ok /(?i)warning: multiple kernel versions detected under/
+ok /(?i)warning: overwriting stash/
+# Jira
+ok /(?i)search: project/
+ok /(?i)jira_ticket:/
+ok /(?i)^error: 400:the option.*for field.*does not exist/
+ok /(?i)error: \d+:\w+ 'customfield_/
+# Release Notes
+ok /(?i)appending open defect/
+ok /(?i)appending new defects/
+ok /(?i)appending merged defect/
+ok /(?i)debug:/
+# Google Test
+ok /(?i)(memcheck|test) #[1-9]?[0-9]+:/
+ok /(?i)child aborted/
+ok /(?i)recipe for target 'ut-.*' failed/
+ok /(?i)start [1-9]?[0-9]+:/
+ok /tpLOG_(error|debug|info|osErr|verbose)/
+# Modem SA515
+ok /Island is not supported for/
+
+# INFO
+info /\(BLD\)/
+info /\(TST\)/
+info /\(MDM\)/
+info /\(VC\)/
+info /\(SDK\)/
+info /\(UP\)/
+info /\(KW\)/
+info /\(BE\)/
+info /\(BP\)/
+info /\(DP\)/
+info /\(MET\)/
+
+# WARNING
+warning /(?i)error: 403:you do not have the permission to see the specified issue./
+warning /(?i)error: 404:issue does not exist/
+warning /(?i)ignoring \"JiraLink:/
+warning /(?i)^debug:  error 404/
+warning /(?i)warning:/
+warning /bad substitution/
+warning /(?i)error [1-9]?[0-9]+ (ignored)/
+
+# ERROR
+error /(?i)(^|\s|\[)rejected(\s+|\]|$)/
+error /(?i): line \d+:/
+error /(?i)\baborted\b/
+error /(?i)ambiguous redirect/
+error /(?i)bad array subscript/
+error /(?i)binary operator expected/
+error /(?i)cannot create directory/
+error /(?i)cannot execute binary file/
+error /(?i)cannot open shared object file/
+error /(?i)command not found/
+error /(?i)connection refused/
+error /(?i)could not connect to/
+error /(?i)could not generate \w+ report/
+error /(?i)cp: cannot stat/
+error /(?i)directory not empty/
+error /(?i)error [1-9]?[0-9]+$/
+error /(?i)error in file io/
+error /(?i)error occurred during build/
+error /(?i)error while loading shared libraries/
+error /(?i)error: cannot fetch/
+error /(?i)errors:/
+error /(?i)exception:/
+error /(?i)exiting with failure status due to previous errors/
+error /(?i)failed to/
+error /(?i)fatal:/
+error /(?i)file read error:/
+error /(?i)illegal number of parameters/
+error /(?i)indexerror: list index out of range/
+error /(?i)installing package.*needs/
+error /(?i)is incompatible with/
+error /(?i)is required/
+error /(?i)load of build analysis ended with errors/
+error /(?i)mv: cannot stat/
+error /(?i)no keytool application found/
+error /(?i)no rule to make target/
+error /(?i)no space left on device/
+error /(?i)permission denied/
+error /(?i)recipe for target.*failed/
+error /(?i)ret_code=[1-9][0-9]*$/
+error /(?i)returned [1-9][0-9]* exit status/
+error /(?i)rsync error:/
+error /(?i)rsync:.*file exists/
+error /(?i)sed: can't read/
+error /(?i)unable to access license server/
+error /(?i)unable to acquire lock/
+error /(?i)unable to recognise the format of the input file/
+error /(?i)undefined reference to/
+error /(?i)undefined symbol/
+error /(?i)unhandled exception/
+error /(?i)unknown command/
+error /(?i)valueerror/
+error /(?i)waiting for unfinished jobs/
+# GoogleTest errors
+error /No (Cobertura|Googletest) files were found in the project/
+# Case sensitive
+error /UNTRACKED_FILES=[^0].*/
+# Grouped failures
+error /(?i)(authentication|license check|login|target-all) failed/
+# Negative Lookbehind for '-', e.g.: 'clobbering libgpg-error:'
+error /(?i)(?<!-)error(s)?:/
+
+# KW errors
+error /Traceback \(most recent call last\):/
+error /http.client.BadStatusLine/
+error /(?i)[1-9]?[0-9]+ non-zero exit codes/
+error /kwloaddb/
+
+# PowerShell
+error /FullyQualifiedErrorId/

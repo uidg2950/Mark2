@@ -1,0 +1,123 @@
+# ******************************************************************************
+# *
+# *  (c) 2016 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/subaru
+# *
+# *  Description:
+# *
+# ******************************************************************************
+# OK
+ok /(?i)%d error: %s/
+ok /(?i)=======: command not found/
+ok /(?i)commit message/
+ok /(?i)device not found/
+ok /(?i)download completed with error:/
+ok /(?i)ds_log_med/
+ok /(?i)elf: command not found/
+ok /(?i)error [1-9]?[0-9]+ (ignored)/
+ok /(?i)error: open fda failed.*/
+ok /(?i)error: target is not in factory mode/
+ok /(?i)error: the process "atmnserver.exe" not found/
+ok /(?i)error: the process "qpstserver.exe" not found/
+ok /(?i)fatal: invalid revision range/
+ok /(?i)fix systemd command not found/
+ok /(?i)info:.*is not available/
+ok /(?i)ipacm_perf_err/
+ok /(?i)log_msg_error/
+ok /(?i)log_msg_info/
+ok /(?i)printf/
+ok /(?i)qbridge_log/
+ok /(?i)verbose errors:/
+ok /(?i)warning: -jN forced in submake: disabling jobserver mode/
+ok /(?i)warning: multiple kernel versions detected under/
+ok /(?i)warning: overwriting stash/
+ok /(?i)xqcn directory is not available at: ''/
+ok /(?i)No package 'libcanwrapper' found/
+ok /OSAL_LOGE/
+ok /QCRIL_LOG_ERROR/
+ok /INFO:/
+
+# Google Test
+ok /(?i)(memcheck|test) #[1-9]?[0-9]+:/
+ok /(?i)child aborted/
+ok /(?i)recipe for target 'ut-.*' failed/
+ok /(?i)start [1-9]?[0-9]+:/
+ok /(?i)tplog_oserr/
+ok /(?i)tplog_error/
+# Modem SA515
+ok /Island is not supported for/
+# Repo
+ok /HEAD is now at/
+
+
+# INFO
+info /\(BLD\)/
+info /\(TST\)/
+info /\(MDM\)/
+info /\(VC\)/
+info /\(SDK\)/
+info /\(UP\)/
+info /\(KW\)/
+info /\(BE\)/
+info /\(BP\)/
+info /\(DP\)/
+info /\(MET\)/
+
+# WARNING
+warning /bad substitution/
+warning /(?i)warning:/
+warning /ignored/
+warning /(?i)\d+\/\d+ depends on \d+ unmerged changes:/
+
+# ERROR
+error /(?i)\[\s\] klocwork issues/
+error /(?i)\[\s\] test success rate/
+error /(?i)cannot create directory/
+error /(?i)cannot execute binary file/
+error /(?i)cannot open shared object file/
+error /(?i)command not found/
+error /(?i)conflicts with file/
+error /(?i)could not complete the cherry-pick/
+error /(?i)cp: cannot stat/
+error /(?i)error [1-9]?[0-9]+$/
+error /(?i)error occurred during build/
+error /(?i)error while loading shared libraries/
+error /(?i)failed \(err=-\d+\)/
+error /(?i)failed to/
+error /(?i)fatal error:/
+error /(?i)fatal:/
+error /(?i)file format not recognized/
+error /(?i)file not found by glob/
+error /(?i)has no member named/
+error /(?i)hint:/
+error /(?i)illegal number of parameters/
+error /(?i)installed \(but unpackaged\) file\(s\) found:/
+error /(?i)integer expression expected/
+error /(?i)is not available/
+error /(?i)klocwork issues found: [1-9]\d+/
+error /(?i)mv: cannot stat/
+error /(?i)no rule to make target/
+error /(?i)not able to flash the images correctly/
+error /(?i)permission denied/
+error /(?i)recipe for target '.*' failed/
+error /(?i)ret_code=[1-9][0-9]*$/
+error /(?i)returned [1-9][0-9]* exit status/
+error /(?i)rsync error:/
+error /(?i)sysint verdict: failed/
+error /(?i)target-all failed/
+error /(?i)timeout \(\d+s\) reached:/
+error /(?i)unable to access license server/
+error /(?i)unable to recognise the format of the input file/
+error /(?i)undefined reference to/
+error /(?i)waiting for unfinished jobs/
+error /CONFLICT/
+error /Exiting with failure status due to previous errors/
+error /No package/
+error /too many arguments/
+# Negative Lookbehind for '-', e.g.: 'clobbering libgpg-error:'
+error /(?i)(?<!-)error(s)?:/

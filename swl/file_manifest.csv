@@ -1,0 +1,52 @@
+Package|FileType|Filename|Devel|FileTypeDetailed
+gcc|file|lib/libgcc_s.so|no|ASCII text
+gcc|file|lib/libgcc_s.so.1|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=90c1b17c307a479647437997be08d52a43da684a, not stripped
+gcc|file|usr/lib/libcc1.so|no|symbolic link to libcc1.so.0.0.0
+gcc|file|usr/lib/libcc1.so.0|no|symbolic link to libcc1.so.0.0.0
+gcc|file|usr/lib/libstdc++.so|no|symbolic link to libstdc++.so.6.0.25
+gcc|file|usr/lib/libstdc++.so.6|no|symbolic link to libstdc++.so.6.0.25
+gcc|file|usr/lib/libstdc++.so.6.0.25|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (GNU/Linux), dynamically linked, BuildID[sha1]=20a923c13b80cca693af4a7e613cc04c8e2c4ddb, not stripped
+glibc|directory|lib|no|directory
+glibc|file|lib/ld-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
+glibc|file|lib/ld-linux-armhf.so.3|no|symbolic link to ld-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libBrokenLocale-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libBrokenLocale.so.1|no|symbolic link to libBrokenLocale-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libSegFault.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libanl-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libanl.so.1|no|symbolic link to libanl-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libc-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libc.so.6|no|symbolic link to libc-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libcrypt-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libcrypt.so.1|no|symbolic link to libcrypt-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libdl-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libdl.so.2|no|symbolic link to libdl-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libm-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libm.so.6|no|symbolic link to libm-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libmemusage.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnsl-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnsl.so.1|no|symbolic link to libnsl-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_compat-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_compat.so.2|no|symbolic link to libnss_compat-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_db-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_db.so.2|no|symbolic link to libnss_db-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_dns-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_dns.so.2|no|symbolic link to libnss_dns-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_files-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_files.so.2|no|symbolic link to libnss_files-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_hesiod-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_hesiod.so.2|no|symbolic link to libnss_hesiod-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_nis-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_nis.so.2|no|symbolic link to libnss_nis-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libnss_nisplus-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libnss_nisplus.so.2|no|symbolic link to libnss_nisplus-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libpcprofile.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libpthread-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libpthread.so.0|no|symbolic link to libpthread-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libresolv-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libresolv.so.2|no|symbolic link to libresolv-glibc_2.28_24_g17716bc.so
+glibc|file|lib/librt-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (GNU/Linux), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/librt.so.1|no|symbolic link to librt-glibc_2.28_24_g17716bc.so
+glibc|file|lib/libthread_db-1.0.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libthread_db.so.1|no|symbolic link to libthread_db-1.0.so
+glibc|file|lib/libutil-glibc_2.28_24_g17716bc.so|no|ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, for GNU/Linux 3.14.0, not stripped
+glibc|file|lib/libutil.so.1|no|symbolic link to libutil-glibc_2.28_24_g17716bc.so

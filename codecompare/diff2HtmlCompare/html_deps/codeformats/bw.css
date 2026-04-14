@@ -1,0 +1,96 @@
+body .hll { background-color: #ffffff }
+body  { background: #ffffff; }
+body .c { color: #000000 } /* Comment */
+body .err { border: 1px solid #FF0000 } /* Error */
+body .k { color: #000000 } /* Keyword */
+body .cm { color: #000000 } /* Comment.Multiline */
+body .cp { color: #000000 } /* Comment.Preproc */
+body .c1 { color: #000000 } /* Comment.Single */
+body .cs { color: #000000 } /* Comment.Special */
+body .ge { font-style: italic } /* Generic.Emph */
+body .gh { font-weight: bold } /* Generic.Heading */
+body .gp { font-weight: bold } /* Generic.Prompt */
+body .gs { font-weight: bold } /* Generic.Strong */
+body .gu { font-weight: bold } /* Generic.Subheading */
+body .kc { color: #000000 } /* Keyword.Constant */
+body .kd { color: #000000 } /* Keyword.Declaration */
+body .kn { color: #000000 } /* Keyword.Namespace */
+body .kp { color: #000000 } /* Keyword.Pseudo */
+body .kr { color: #000000 } /* Keyword.Reserved */
+body .kt { color: #000000 } /* Keyword.Type */
+body .s { color: #000000 } /* Literal.String */
+body .nc { color: #000000 } /* Name.Class */
+body .ow { color: #000000 } /* Operator.Word */
+body .sb { color: #000000 } /* Literal.String.Backtick */
+body .sc { color: #000000 } /* Literal.String.Char */
+body .sd { color: #000000 } /* Literal.String.Doc */
+body .s2 { color: #000000 } /* Literal.String.Double */
+body .se { color: #000000 } /* Literal.String.Escape */
+body .sh { color: #000000 } /* Literal.String.Heredoc */
+body .si { color: #000000 } /* Literal.String.Interpol */
+body .sx { color: #000000 } /* Literal.String.Other */
+body .sr { color: #000000 } /* Literal.String.Regex */
+body .s1 { color: #000000 } /* Literal.String.Single */
+body .ss { color: #000000 } /* Literal.String.Symbol 
+
+/* 
+These styles are used to highlight each diff line.
+Note: for partial like highlight change to "display:block-inline" 
+*/
+span.left_diff_change {
+  background-color: #ffffff;
+  display: block
+}
+span.left_diff_add {
+  background-color: #ffffff;
+  display: block
+}
+span.left_diff_del {
+  background-color: #ffffff;
+  display: block
+}
+
+span.right_diff_change {
+  background-color: #ffffff;
+  display: block
+}
+
+span.right_diff_add {
+  background-color: #ffffff;
+  display: block
+}
+span.right_diff_del {
+  background-color: #ffffff;
+  display: block
+}
+span.clearbg {
+  background-color: transparent;
+}
+span.lineno_lequ_q {
+  display: block;
+}
+span.lineno_requ_q {
+  display: block;
+}
+span.lineno_rightchange_q {
+  display: block;
+}
+span.lineno_leftchange_q {
+  display: block;
+}
+span.lineno_rightdel_q {
+  display: block;
+}
+span.lineno_rightadd_q {
+  display: block;
+}
+span.lineno_leftdel_q {
+  display: block;
+}
+span.lineno_leftadd_q {
+  display: block;
+}
+span.lineno_q {
+  display: block;
+}
+element.style { display : none ;}

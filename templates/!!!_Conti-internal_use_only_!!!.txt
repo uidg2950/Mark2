@@ -1,0 +1,26 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!! DISCLAIMER  !!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+======================================================
+This SWL bundle is for Conti-internal testing only !!!
+======================================================
+
+Creation process and content:
+- the base is an "original" Harman SW package containing Conti, e.So and Harman SW part
+  (Harman base SW package name can be taken from the zip file name, e.g. "X323")
+- Conti SW part was patched by the binaries and content of the "current" build.
+
+I.e. the package combines "N-1" e.So and "N" Conti, where the e.So build was not integrated / compiled against that Conti SDK.
+This may lead to system behaviour that would not be observed with a full e.So integration on this SDK.
+
+As a consequence, it shall be used for Conti-internal test purposes only, e.g.
+- run some basic tests on a potential Conti release candidate in the context of e.So / Harman system BEFORE release to customer
+- execute tests of Conti functions and interfaces in the full system context where just the "presence" of e.So and Harman is sufficient
+  but that do not require exact and fine-tuned interaction especially between Conti and e.So SW.
+
+It is NOT intended for feature tests and especially
+
+=========================================
+NOT intended for delivery to customer !!!
+=========================================

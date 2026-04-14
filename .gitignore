@@ -1,0 +1,12 @@
+# UltraEdit backup files:
+*.bak
+*.BAK
+
+# temporary files, used in local git workarea
+_temp*
+_TEMP*
+__TEMP*
+
+# PyCharme
+.idea
+__pycache__

@@ -1,0 +1,47 @@
+# ******************************************************************************
+# *
+# *  (c) 2013-2015 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/modem
+# *
+# *  Description:
+# *
+# *  Revision History:
+# *
+# *  CQ#    Author           Date          Description of Change(s)
+# *  -----  -------------    ----------    -------------------------------------
+# *         A. Quintero      03/19/2015    init version
+# *         A. Quintero      07/08/2015    Adding line for error [Fatal error]
+# ******************************************************************************
+error /[1-9][0-9]* [Ee]rror[s]?/
+error /build_result=[1-9][0-9]*/
+error /Error [1-9][0-9]*/
+error /!! ERROR/
+error /Error occurred during build/
+error /Fatal error/
+error /File read error:/
+error /rsync error:/
+
+# list of warnings here...
+warning /[Ww]arning/
+warning /WARNING/
+warning /[1-9][0-9]* [Ww]arning[s]?/
+warning /cannot/
+
+# create a quick access link to lines in the report containing 'INFO'
+info /INFO/
+info /[Ii]nfo/
+info /SCons build summary/
+info /Loading/
+info /build_result=0/
+
+# each line containing 'BUILD' represents the start of a section for grouping errors and warnings found after the line.
+# also creates a quick access link.
+start /\sBUILD\s/
+start /\sBUILDING\s/
+
+#ok/error/warn/info/start

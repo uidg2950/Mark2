@@ -1,0 +1,56 @@
+# ******************************************************************************
+# *
+# *  (c) 2016 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/bolero
+# *
+# *  Description:
+# *
+# ******************************************************************************
+# OK
+ok /(?i)commit message:/
+ok /(?i)echo warning/
+ok /.*ECHO WARNING:.*/
+ok /1 error\(s\) and 0 warning\(s\)/
+ok /\d+ error\(s\) and \d+ warning\(s\)/
+
+# INFO
+info /(?i)updating/
+info /(?i)errorlevel is: 0/
+info /(?i)system error 85 has occurred/
+info /(?i)after an HTTP Error 500: Server Error/
+info /(?i)DC_Trace_Print\(/
+info /(?i)DC_Trace_Print_Info\(DEBUG_MSG_/
+# KW stage
+info /(?i)BUB_DEBUG_ERR/
+
+# WARNING
+warning /(?i)warning$/
+warning /(?i)file not categorized/
+warning /(?i)line [1-9][0-9]* warning/
+
+# ERROR
+error /(?i).*error [1-9][0-9]*/
+error /(?i)\[\s\] test success rate/
+error /(?i)authentication failed/
+error /(?i)cannot connect to server/
+error /(?i)could not open input file/
+error /(?i)error:/
+error /(?i)errorlevel is : [1-9][0-9]*/
+error /(?i)error [1-9]?[0-9]+$/
+error /(?i)[1-9][0-9]* error generated/
+error /(?i)invalid drive specification/
+error /(?i)it seems that there is already a rebase-apply directory/
+error /(?i)java.io.interruptedioexception/
+error /(?i)license check failed/
+error /(?i)no such file or directory/
+error /(?i)permission denied, please try again/
+error /(?i)runtimeexception/
+error /(?i)the system cannot find the file specified/
+error /(?i)unable to fetch/
+error /(?i)fatal error/
+error /(?i)SCRUM Terminated unexpectedly/

@@ -1,0 +1,26 @@
+{
+  "template_version": "5.0",
+  "component": "Conti_SDK",
+  "versions": {
+    "delivery": ""
+  },
+  "Fileset": { },
+  "supplier": "Continental Automotive",
+  "supplier_contact": "selva.kumar.jayakrishnan@aumovio.com",
+  "unpack": [ ],
+  "valid_builds": {
+    "eso_sdk": "43.0.29.*.*",
+    "project": "ConMod_esoSDK",
+    "variants": [
+      "AU_ROW_NONE_DEV_UNIT",
+      "AU_ROW_NONE_PROD_UNIT",
+      "PO_ROW_NONE_DEV_UNIT",
+      "PO_ROW_NONE_PROD_UNIT",
+      "VWN_ROW_MEB_DEV_UNIT",
+      "VWN_ROW_MEB_PROD_UNIT",
+      "VW_ROW_MEB_DEV_UNIT",
+      "VW_ROW_MEB_PROD_UNIT"
+    ]
+  }
+}
+

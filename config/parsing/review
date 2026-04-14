@@ -1,0 +1,38 @@
+# ******************************************************************************
+# *
+# *  (c) 2020-2021 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  review
+# *
+# *  Description: Parse rules for telematics-cm reviews
+# *
+# ******************************************************************************
+# OK - Granted errors
+ok /DEBUG:/
+ok /Commit message:/
+ok /Previous HEAD position/
+ok /FILES_CHANGED/
+ok /HEAD is now at/
+# Ticket pattern
+ok /^[A-Z0-9]+-[1-9]\d*([\s,]+\w+-[1-9]\d*)*\s*:/
+
+# ERROR
+error /AssertionError/
+error /E\d+:/
+error /error/
+error /Errors encountered validating/
+error /FAILED/
+error /SC\d+:/
+# Groovy errors
+error /^\s+\d+\s{2,}info/
+
+# WARNING
+warning /warning/
+warning /W\d+:/
+
+# INFO
+info /[CR]\d+:/

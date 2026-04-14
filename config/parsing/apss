@@ -1,0 +1,35 @@
+# ******************************************************************************
+# *
+# *  (c) 2020-2021 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/apss
+# *
+# *  Description:
+# *
+# ******************************************************************************
+ok /(?i)commit message/
+ok /(?i)unable to get checksum/
+ok /(?i)X11IncludeHack/
+ok /echo '"###' ERROR:/
+
+error /(?i)error: failed to push some refs/
+error /(?i)failed: /
+error /(?i)fatal: could not read from remote repository./
+error /(?i)fatal: project not found:/
+error /(?i)fatal: the remote end hung up unexpectedly/
+error /(?i)fatal: unable to connect/
+error /(?i)fetcher failure:/
+error /(?i)no such file or directory/
+error /Cannot assign requested address/
+error /command not found/
+error /conflicts between attempted installs/
+error /ERROR:/
+error /non-fast-forward/
+error /SSL_ERROR_SYSCALL/
+error /STOPTASKS/
+error /SyntaxError/
+error /Transaction check error/

@@ -1,0 +1,27 @@
+{
+    "//":[
+        "(c) 2019 Continental Automotive Systems, Inc., all rights reserved",
+        "This JavaScript Object Notation defines the repositories that are to",
+        "be excluded from the gerrit reviews report"
+    ],
+    "repos_excluded":[
+        "p1/package/aivc/",
+        "p1/package/drt-app/",
+        "p1/package/drt-hal/",
+        "p1/package/drt-mid/",
+        "p1/package/drt-security/",
+        "p1/package/drt-test/",
+        "p1/project/aivc/",
+        "p1/project/buic-osrb/tools",
+        "p1/project/drt/",
+        "p1/project/ford_tcu/",
+        "p1/project/hkmc2/",
+        "p1/project/oip-conn/",
+        "p1/project/pre-dev/toyota",
+        "p1/project/subaru-gen1-volte/",
+        "p1/project/subaru-t19plus/",
+        "p1/project/toyota-gdcm/",
+        "p1/project/vcc-tcam",
+        "p1/project/drt-wizards"
+    ]
+}

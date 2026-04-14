@@ -1,0 +1,109 @@
+#!/bin/bash
+# ***************************************************************************************
+# *   Copyright (c) 2021 Continental Automotive Systems, Inc., all rights reserved
+# *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *   Any reproduction of this material without written consent from
+# *   Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *   Filename: archive-tools.lib
+# *
+# *   Description: Archive related functions for ConMOD delivery
+# *
+# *
+# ***************************************************************************************
+
+create_zip_archive() {
+  header1 "Create Zip Archive"
+  source=${1? SOURCE file is required}
+  echo "> source folder: ${source}"
+  destination=${2? DESTINATION folder is required}
+  echo "> Destination zip bundle: ${destination}"
+  overwrite=${3:-n}
+
+  echo "> zip --filesync --recurse-paths ${destination} ${source}"
+  zip --filesync --recurse-paths "${destination}" "${source}"
+
+  [[ "$?" -ne 0 ]] && bail "Unable to create the ${destination} file with ${source}"
+}
+
+unpack_zip_archive() {
+  header1 "Unpack Zip Content"
+  source=${1? SOURCE file is required}
+  echo "> source zip file: ${source}"
+  destination=${2? DESTINATION folder is required}
+  echo "> Destination folder: ${destination}"
+
+  echo "> unzip ${source} -d ${destination}"
+  unzip "${source}" -d "${destination}"
+
+  [[ " $?" -ne 0 ]] && bail "Unable to create the ${destination} file with ${source}"
+}
+
+do_zip_update() {
+  bail "For usage of update_zip_content please provide implementation for do_zip_update()"
+}
+
+update_zip_content() {
+  header1 "Update Zip Content"
+  [[ -z ${WORKSPACE} ]] && bail "Not defined WORKSPACE variable"
+  source=${1? SOURCE file is required}
+  echo "> source zip file: ${source}"
+  echo "> mktemp -d $(WORKSPACE)/zip_workspace.XXXXXXXX"
+  ZIP_WORKSPACE="$(mktemp -d $(WORKSPACE)/zip_workspace.XXXXXXXX)"
+  [[ $? -ne 0 ]] && bail "Failed to create workspace for unzip"
+  echo "> Zip Workspace: ${ZIP_WORKSPACE}"
+  
+  unpack_zip_archive "${source}" "${ZIP_WORKSPACE}"
+  pushd "${ZIP_WORKSPACE}"
+    do_zip_update
+  popd
+
+  create_zip_archive "${ZIP_WORKSPACE}" "${source}"
+}
+
+create_tar_archive() {
+  header1 "Create tar.gz Archive"
+  source=${1? SOURCE file is required}
+  echo "> source folder: ${source}"
+  destination=${2? DESTINATION folder is required}
+  echo "> Destination tar bundle: ${destination}"
+
+  echo "> tar --create --gzip --file ${destination} ${source}"
+  tar --create --gzip --file ${destination} ${source}
+  [[ " $?" -ne 0 ]] && bail "Unable to create the ${destination} file with ${source}"
+}
+
+unpack_tar_archive() {
+  header1 "Unpack Tar Content"
+  source=${1? SOURCE file is required}
+  echo "> source zip file: ${source}"
+  destination=${2? DESTINATION folder is required}
+  echo "> Destination folder: ${destination}"
+
+  echo "> zip --filesync --recurse-paths ${destination} ${source}"
+  unzip "${source}" -d "${destination}"
+
+  [[ " $?" -ne 0 ]] && bail "Unable to create the ${destination} file with ${source}"
+}
+
+do_tar_update() {
+  bail "For usage of update_tar_archive please provide implementation for do_tar_update()"
+}
+
+update_tar_archive() {
+  header1 "Update Tar.gz Content"
+  [[ -z ${WORKSPACE} ]] && bail "Not defined WORKSPACE variable"
+  source=${1? SOURCE file is required}
+  echo "> source tar file: ${source}"
+  echo "> mktemp -d $(WORKSPACE)/tar_workspace.XXXXXXXX"
+  TAR_WORKSPACE="$(mktemp -d $(WORKSPACE)/tar_workspace.XXXXXXXX)"
+  [[ $? -ne 0 ]] && bail "Failed to create workspace for untar"
+  echo "> TAR Workspace: ${TAR_WORKSPACE}"
+  
+  unpack_tar_archive "${source}" "${TAR_WORKSPACE}"
+  pushd "${TAR_WORKSPACE}"
+    do_tar_update
+  popd
+
+  create_tar_archive "${TAR_WORKSPACE}" "${source}"
+}

@@ -1,0 +1,21 @@
+# ******************************************************************************
+# *
+# *  (c) 2020 Continental Automotive Systems, Inc., all rights reserved
+# *
+# *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *  Any reproduction of this material without written consent from
+# *  Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *  Filename:  parsing/sdk
+# *
+# *  Description: Parse rules for sdk-constructor reviews
+# *
+# ******************************************************************************
+ok /Commit message:/
+ok /HEAD is now at/
+
+warning /find:/
+
+error /(?i)error:/
+error /missing file operand/
+error /No such file or directory/

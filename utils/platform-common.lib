@@ -1,0 +1,419 @@
+#!/bin/bash
+# ***************************************************************************************
+# *   Copyright (c) 2021 Continental Automotive Systems, Inc., all rights reserved
+# *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
+# *   Any reproduction of this material without written consent from
+# *   Continental Automotive Systems, Inc. is strictly forbidden.
+# *
+# *   Filename: platform-common.lib
+# *
+# *   Description: General purpose functions for CAT delivery
+# *
+# *
+# ***************************************************************************************
+SEPARATOR_LEN=100
+SEPARATOR=$(printf '#%.s' $(eval "echo {1..$(($SEPARATOR_LEN))}");)
+SEPARATOR2=$(printf '#%.s' $(eval "echo {1..$(($SEPARATOR_LEN/2))}");)
+SEPARATOR3=$(printf '=%.s' $(eval "echo {1..$(($SEPARATOR_LEN/2))}");)
+header1()
+{
+    echo "${SEPARATOR}"
+    padding "$@"
+    echo "${SEPARATOR}"
+}
+
+header2()
+{
+    echo "${SEPARATOR}"
+    padding "$@"
+}
+
+header3()
+{
+    echo "${SEPARATOR2}"
+    padding "$@"
+}
+
+header4()
+{
+    echo "${SEPARATOR3}"
+    _padding "$@"
+    echo "${SEPARATOR3}"
+}
+
+bail()
+{
+    echo "Error: ${*}"
+    exit 1
+}
+
+debug()
+{
+    MESSAGE=$1
+    echo "===== BULLSEYE: ${MESSAGE}"
+}
+
+padding()
+{
+    local MESSAGE=$(echo "$@" | tr [a-z] [A-Z])   # ALL UPPERCASE
+    _padding "${MESSAGE}"
+}
+
+_padding()
+{
+    local MESSAGE=$@
+    OFFSET=$(expr \( "${SEPARATOR_LEN}" - "${#MESSAGE}" \) / 2)
+    printf ' %.s' $(eval "echo {1..$(($OFFSET))}");
+    echo "$MESSAGE"
+}
+
+repo_init()
+{
+    local project=${1?project is required}
+    local manifest_branch=${2?manifest_branch is required}
+    local groups=${3:-all}
+    local repo_branch=${4}
+    local repo_url=${5}
+
+    _repo_init "${project}" "${manifest_branch}" "${groups}" "${repo_branch}" "${repo_url}"
+
+    if [[ $? -ne 0 ]]; then
+        echo "Unable to repo init, trying a cleanup"
+        local erase=('.repo/manifest*' '.repo/local_manifests' 'platform-*' 'manifests/platform-*')
+        for filename in "${erase[@]}"; do
+            echo "rm -rf ${filename}"
+            rm -rf ${filename}
+        done
+        _repo_init "${project}" "${manifest_branch}" "${groups}" "${repo_branch}" "${repo_url}"
+    fi
+
+    echo ">repo version"
+    repo version
+}
+
+_repo_init()
+{
+    local project=${1?project is required}
+    local manifest_branch=${2?manifest_branch is required}
+    local groups=${3? groups is required}
+    local repo_branch=${4}
+    local repo_url=${5}
+
+    local repo_options=
+    local ret_code=0
+    local sync_status_file=$(mktemp /tmp/repo_init.XXXXXXXXX)
+
+    [[ -n "${repo_branch}" ]] && repo_options="${repo_options} --repo-branch=${repo_branch}"
+    [[ -n "${repo_url}" ]] && repo_options="${repo_options} --repo-url=${repo_url}"
+    [[ -n "${repo_options}" ]] && repo_options="${repo_options} --no-repo-verify"
+
+    echo "> repo init -u buic-scm:p1/project/${project}/manifest -b ${manifest_branch} -g ${groups} --quiet ${repo_options}"
+    repo init -u buic-scm:p1/project/${project}/manifest -b ${manifest_branch} -g ${groups} --quiet ${repo_options} 2> "${sync_status_file}"
+    ret_code=$?
+
+    # Here there should be a way to handle different scenarios like malformed manifests
+    if [[ "${ret_code}" -ne 0 ]] && [[ -f "${sync_status_file}" ]]; then
+        cat "${sync_status_file}"
+    fi
+
+    # Cleanu-up
+    rm -f "${sync_status_file}"
+
+    return ${ret_code}
+}
+
+repo_sync() {
+    local type=${1} # soft -> only sync; hard -> clean before sync
+    local full=${2} # null -> only one branch; value -> all
+
+    # Treat the rest of the arguments as extras, and wipe the argument list
+    [[ -n "${type}" ]] && shift
+    [[ -n "${full}" ]] && shift
+
+    local args=${*} # anything
+    shift ${#}      # Remove the rest of the arguments so we don become recursive
+
+    local current_branch    # repo sync helper
+    local sync_status_file=$(mktemp /tmp/sync_status.XXXXXXXXX)
+    local ret_code=0
+    local local_manifests_dir=".repo/local_manifests"
+
+    # Options:
+    #   -c, --current-branch  fetch only current branch from server
+    #   -q, --quiet           be more quiet
+    if [[ "${type}" == "hard" ]]; then
+        local parallel_jobs="-j8"
+
+        # First verify the project is in the right state
+        echo "> check_forall_execution"
+        check_forall_execution
+
+        echo "> repo_reset_hard ${parallel_jobs}"
+        repo_reset_hard "${parallel_jobs}"
+
+        echo "> remove_local_tags ${WORKSPACE} ${parallel_jobs}"
+        remove_local_tags "${WORKSPACE}" "${parallel_jobs}"
+    else
+        echo "> Not cleaning remaining artifacts due to 'soft' sync"
+    fi
+
+    # To solve problems with un-tracked files in each repository
+    [[ -z "${full}" ]] && current_branch="-c"
+
+    # We need the --force-broken to catch all the errors
+    echo "repo sync ${current_branch} --force-sync --force-broken --quiet ${args} 2> ${sync_status_file}"
+    repo sync ${current_branch} --force-sync --force-broken --quiet ${args} 2> "${sync_status_file}"
+    ret_code=$?
+
+    if grep -iqE 'deleting obsolete path' "${sync_status_file}"; then
+        # This is not an error message but in legacy mode two syncs were required to fully
+        # reestablish a build area
+        echo "> local manifest removed, double sync applied"
+        cat "${sync_status_file}"
+
+        # Just in case something is really wrong with the build areas
+        clean_broken_link "${local_manifests_dir}"
+
+        echo "repo_sync $*"
+        repo_sync $*
+
+        ret_code=$?
+    elif grep -q -iE "fatal: duplicate path" "${sync_status_file}"; then
+        echo "> Duplicated paths found, removing local manifests"
+        clean_broken_link "${local_manifests_dir}" force
+
+        echo "repo_sync $*"
+        repo_sync $*
+        ret_code=$?
+    elif grep -q -iE "(git)?error" "${sync_status_file}"; then
+        # This happens when untracked files exists under projects not registered in repo
+        # For example taking an area after new packages are being added
+        ret_code=0  # Reset so we can try it again
+
+        echo "> Not possible to sync, re-trying after deleting extras present in ${sync_status_file}"
+        if grep -q "fatal: error parsing manifest" "${sync_status_file}"; then
+            echo "> Not possible to parse the manifest"
+            local real_path             # where the soflink points to
+            local real_path_parent_dir  # We also need to delete the realpath parent dir
+
+            # We cannot recover from this scenario, the best thing we can do is to leave a clean area.
+            ret_code=1
+
+            # e.g.: fatal: error parsing manifest /u01/app/jenkins/workspace/Telematics/HTP-APP-SA515M-THICK-3Y-CI/.repo/local_manifests/10-platform-hal.xml: not well-formed (invalid token): line 129, column 0
+            wrong_paths=($(grep 'fatal: error parsing manifest' "${sync_status_file}" | cut -d' ' -f5 | sed 's@.$@@'))
+            echo "wrong_paths=${wrong_paths[@]}"
+            for path in "${wrong_paths[@]}"; do
+                real_path=$(readlink -f "${path}")
+                real_path_parent_dir=$(dirname "${real_path}")
+
+                if [[ "$(basename ${path})" == "manifest.xml" ]]; then
+                    # Root manifest only needs to be restored to its previous state
+                    pushd "${real_path_parent_dir}"
+                        echo "git reset --hard"
+                        git reset --hard
+                    popd
+                else
+                    # Delete parent directory of realpath in case of sub-manifest
+                    echo "> rm -rf '${real_path_parent_dir}' '${path}'"
+                    rm -rf "${real_path_parent_dir}" "${path}"
+                fi
+            done
+        elif grep -q 'fatal: The remote end hung up unexpectedly' "${sync_status_file}"; then
+            # This errors usually happens when trying to download git packages like the BSP ones
+            echo "> The remote end hung up unexpectedly, trying bare downloads"
+            bare_projects=($(find ".repo/projects" -name '*.git'))
+            for bare_project in "${bare_projects[@]}"; do
+                pushd "${bare_project}"
+                    git remote update
+                popd &>/dev/null
+            done
+        else
+            # So far, these are the common error expressions:
+            if grep -qE 'fatal: Could not parse object' "${sync_status_file}"; then
+                # Nothing to do, fail the sync
+                cat "${sync_status_file}"
+                return 1
+            elif grep -q "fatal: Couldn't find remote ref" "${sync_status_file}"; then
+                # Nothing to do, fail the sync
+                cat "${sync_status_file}"
+                return 1
+            elif grep -q "fatal: Project not found" "${sync_status_file}"; then
+                cat "${sync_status_file}"
+                # Nothing to do, fail the sync
+                return 1
+            elif grep -q -iE "fatal: This operation must be run in a work tree" "${sync_status_file}"; then
+                echo "> This operation must be run in a work tree"
+                # shellcheck disable=SC2016
+                wrong_paths=($(repo forall -c '[ -d .git ] || echo ${REPO_PATH}' 2>/dev/null))
+            elif grep -q '^IOError: [Errno 2] No such file or directory:' "${sync_status_file}"; then
+                cat "${sync_status_file}"
+                # Nothing to do, fail the sync
+                return 1
+            elif grep -q "fatal: Not a git repository" "${sync_status_file}"; then
+                echo "> Not a git repository"
+                wrong_paths=($(grep -ohE '^fatal: Not a git repository.*$' "${sync_status_file}" | awk '{print $NF}'))
+            elif grep -q "fatal:.*does not appear to be a git repository" "${sync_status_file}"; then
+                echo "> Does not appear to be a git repository"
+                # Format goes as:
+                # fatal: '{package}/.git' does not appear to be a git repository
+                wrong_paths=($(grep -ohE '^fatal:.*does not appear to be a git repository.*$' "${sync_status_file}" | awk '{print $2}'))
+                # Usually restoring the whole manifest structure helps
+                wrong_paths+=('.repo/remote_manifests')
+            elif grep -q "error:.*checkout [0-9a-f]*" "${sync_status_file}"; then
+                echo "> Unable to checkout"
+                wrong_paths=($(grep -ohE '^error:.*checkout .*[0-9a-f]*$' "${sync_status_file}" | cut -d: -f2))
+            elif grep -q 'error: Cannot fetch' "${sync_status_file}"; then
+                echo "> Unable to fetch projects"
+                # There are two error codes, one where the remote cannot be found and one with an
+                # improper SHA. Both deliver the project name in the fourth token
+                # e.g.: error: Cannot fetch p1/package/qualcomm/qcom-sa515m-le-2-0
+                # e.g.: error: Cannot fetch p1/package/opensource/linux-3.18 (GitError: project update-ref: fatal: HASH^0: not a valid SHA1
+                wrong_paths=($(grep -ohE '^error: Cannot fetch .*$' "${sync_status_file}" | awk '{print $4}'))
+            elif grep -qE "error:.*uncommitted changes" "${sync_status_file}"; then
+                echo "> uncommitted changes are present"
+                # e.g: error: Cannot remove project "package/opensource/binutils": uncommitted changes are present
+                # -o match only
+                # -h no namefile
+                # -E extenden regEX
+                wrong_paths=($(grep -ohE '^error:.*uncommitted' "${sync_status_file}" | cut -d: -f2 | sed 's#Cannot remove project##g'))
+            elif grep -qE '^error: in.*revision.*not found' "${sync_status_file}"; then
+                echo "> Revision not found"
+                # Repo is broken and we cannot assure the project name will match the path it uses. Best we can do is to
+                # delete repo tool and display the errors so a kind integrator can take a look.
+                wrong_paths=($(grep -E '^error: in.*revision.*not found' "${sync_status_file}" | cut -d: -f3))
+            elif grep -q "GitError:" "${sync_status_file}"; then
+                # e.g: error.GitError: package/opensource/libusb update-index: fatal: Not a git repository (or any parent up to mount point /u01/app/jenkins/workspace)
+                wrong_paths=($(grep --only-matching --no-filename -E 'error.GitError: .* fatal:' "${sync_status_file}" | cut -d' ' -f2))
+            elif grep -q '^error: .* does not point to a valid object' "${sync_status_file}"; then
+                echo "> Invalid object found"
+                # Somehow references for projects are broken, repo does not report the offending .git directories so we go
+                # with a corrective action of deleting the projects. Another solution would be to parse the failed references
+                # and iterate to remote the offending projects.
+                wrong_paths=(.repo/projects .repo/project-objects .repo/remote_manifests .repo/local_manifests .repo/repo)
+            elif grep -q 'OSError: .* No such file or directory:' "${sync_status_file}"; then
+                # OSError: [Errno 2] No such file or directory: ${package}.git
+                wrong_paths=($(grep -E '^OSError: .* No such file or directory:' "${sync_status_file}" | cut -d: -f3 | sed 's@/.git@@g'))
+            else
+                # Final resource delete the whole repo script
+                echo "Unable to determine a failure reason"
+                wrong_paths=(".repo/repo")
+            fi
+
+            echo "wrong_paths=${wrong_paths[*]}"
+            for path in ${wrong_paths[*]}; do
+                extended_path=".repo/projects/${path}.git"
+                echo "path=${path}; extended_path=${extended_path}"
+                if [[ "${path}" != "/" ]]; then
+                    path=$(echo "${path}" | tr -d "'" | tr -d '"')
+                    if [[ "${path}" =~ .repo/repo ]]; then
+                        restore_broken_manifest
+                        ret_code=$((ret_code + $?))
+                    else
+                        echo "> rm -rf ${path}"
+                        rm -rf "${path}"
+                        # Extend the behaviour to delete the sources from repo
+                        if [[ -d "${extended_path}" ]]; then
+                            echo "rm -rf ${extended_path}"
+                            rm -rf "${extended_path}"
+                        fi
+                    fi
+                fi
+            done
+
+            echo "> repo_sync $* -j1"
+            repo_sync $* -j1
+            ret_code=$((ret_code + $?))
+        fi
+    elif grep -q "is not a repo command" ${sync_status_file}; then
+        echo "> Trying to fix repo as 'sync' is not available"
+        restore_broken_manifest
+        ret_code=$?
+    elif grep -iqE 'error|fatal' "${sync_status_file}"; then
+        echo "> Uncategorized error(s) found:"
+        cat "${sync_status_file}"
+    else
+        : # No errors found
+    fi
+
+    # To solve problems with un-tracked files in each repository
+    if [[ -z "${current_branch}" ]]; then
+        echo "repo forall -c 'git fetch --quiet origin +refs/heads/*:refs/remotes/origin/*'"
+        repo forall -c 'echo  "[$((REPO_I*100/REPO_COUNT))%] $REPO_PROJECT"; git fetch --quiet origin +refs/heads/*:refs/remotes/origin/*'
+    fi
+
+    return ${ret_code}
+} # End: repo_sync
+
+copy_xqcn_files(){
+    local release_dir=${1?release_dir is required}
+    local xqcn_folder=${2?xqcn_folder is required}
+    local cas_target_hw="sa515m"
+
+    local platform
+    local stage_dirs=()
+    local all_variants
+    local image_dir="${release_dir}/images/devel"
+    local mcfg_versions="${release_dir}/../xqcn_mcfg_versions.txt"
+
+    local payload       # Holds the temporal contents for the final output
+
+    local hw_to_xqcn_filename="" #To be defined just for sa415m and sa515m
+
+    if [[ ${cas_target_hw} =~ sa515m ]]; then
+        platform="*FE5*.xqcn"
+        hw_to_xqcn_filename="SA515_HW_to_QCN_table.txt"
+    else
+        echo "ERROR: '${cas_target_hw}' has not platform defined"
+        return 25
+    fi
+
+    # Create a file containing meta-information about the xqcn files installed
+
+    all_variants=($(find "${xqcn_folder}" -name "${platform}" -printf "%f\n" | cut -d'.' -f1 | uniq))
+    if [ ${#all_variants[@]} -eq 0 ]; then
+        echo "WARNING: No variants found in ${xqcn_folder} matching ${platform}"
+    fi
+    for variant in "${all_variants[@]}"; do
+        latest_xqcn_file=$(find "${xqcn_folder}" -name "${variant}*.xqcn" | sort -r | head -1)
+        if [ -f "${latest_xqcn_file}" ]; then
+            stage_dirs=($(ls "${image_dir}"))
+            if [ -n "${stage_dirs[0]}" ]; then
+                for stage in "${stage_dirs[@]}"; do
+                    if [ -d "${image_dir}/${stage}" ]; then
+                        cp -v "${latest_xqcn_file}" "${image_dir}/${stage}/"
+                    else
+                        echo "No valid staging area"
+                    fi
+                done
+                # Prepend information
+                name=$(basename "${latest_xqcn_file}")
+                size=$(stat --format=%s "${latest_xqcn_file}")
+                [[ -f "${mcfg_versions}" ]] && payload=$(cat "${mcfg_versions}")
+                echo -e "${name//.xqcn}    Size: ${size}\n${payload})" > "${mcfg_versions}"
+            else
+                echo "No stage area found for variant: ${variant}"
+            fi
+        else
+            echo "No file found for variant: ${variant}"
+        fi
+    done
+
+    echo -e "xQCN Versions List: \n\n$(cat $mcfg_versions)" > $mcfg_versions
+
+    #Copy HW_to_QCN_table.txt file if exists.
+    if [ ! -z "${hw_to_xqcn_filename}" ]; then
+        stage_dirs=($(ls "${image_dir}"))
+        if [ -n "${stage_dirs[0]}" ]; then
+            for stage in "${stage_dirs[@]}"; do
+                if [ -d "${image_dir}/${stage}" ]; then
+                    echo "cp -v ${xqcn_folder}/${hw_to_xqcn_filename} ${image_dir}/${stage}/"
+                    cp -v "${xqcn_folder}/${hw_to_xqcn_filename}" "${image_dir}/${stage}/"
+                else
+                    echo "No valid staging area ${image_dir}/${stage}"
+                fi
+            done
+        else
+            echo "No stage area found: ${stage_dirs[0]}"
+        fi
+    fi
+}

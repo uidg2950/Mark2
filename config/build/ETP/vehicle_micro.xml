@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  # *   (c) 2013-2015 Continental Automotive Systems, Inc., all rights reserved                               -->
+<!--  # *                                                                                                         -->
+<!--  # *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.                            -->
+<!--  # *   Any reproduction of this material without written consent from                                        -->
+<!--  # *   Continental Automotive Systems, Inc. is strictly forbidden.                                           -->
+<!--  # *                                                                                                         -->
+<!--  # *   Filename:     vehicle_micro.xml                                                                       -->
+<!--  # *                                                                                                         -->
+<!--  # *   Description:  This xml file contains the build configuration sets to be used on Vehicle_Micro         -->
+<!--  # *                 and TVIP projects to run build automation                                               -->
+<!--  # *                                                                                                         -->
+<!--  # *   Revision History:                                                                                     -->
+<!--  # *                                                                                                         -->
+<!--  # *   V#                 Author           Date           Description of Change(s)                           -->
+<!--  # *   ________           _____________    __________     _________________________                          -->
+<!--  # *   00.00.01           A. Quintero      03/13/2014     init version                                       -->
+<!--  # *   00.00.02           A. Quintero      05/12/2014     adding BUILD_AUDIO_MANAGER                         -->
+<!--  # *   00.00.03           A. Quintero      06/25/2014     adding BUILD_DYN_NVM_TEST                          -->
+<builds>
+    <build id="vehicle_micro">
+        <BUILD_NADIF                build="YES" description=":: build support for IPC protocol component"/>
+        <BUILD_ECALL_ERA            build="YES" description=":: build support for ERA/eCall application"/>
+        <BUILD_CONTI_LOGO           build="NO"  description=":: build support for outputting Continental Logo in debug console trace output log at power up"/>
+        <BUILD_AT_PASSTHRU          build="NO"  description=":: build support for NAD AT command passthru debug command"/>
+        <BUILD_I2C                  build="NO"  description=":: build support for I2C serial bus driver"/>
+        <BUILD_M41T81               build="NO"  description=":: build support for the external Real Time Clock chip, specifically part number M41T81"/>
+        <BUILD_PCA85063A            build="NO"  description=":: build support for the external Real Time Clock chip, specifically part number PCA85063A" />
+        <BUILD_DC                   build="YES" description=":: build support for the debug console trace output (not available in bootloader)"/>
+        <BUILD_IPC_VUC              build="NO"  description=":: build support for IPC protocol component"/>
+        <BUILD_IPC_NAD              build="NO"  description=":: build support for IPC protocol component"/>
+        <BUILD_IPC_ETP_PLUS         build="NO"  description=":: Modifier for ETP_PLUS IPC.  This is a signal only, i.e., it does not select content."/>
+        <BUILD_BOOT                 build="NO"  description=":: build support for example bootloader (only enable in bootloader config)"/>
+        <BUILD_UNIT_TEST            build="NO"  description=":: build support for special function access to facilitate unit testing"/>
+        <BUILD_IPC_UNIT_TEST        build="NO"  description=":: build support for unit test of IPC component"/>
+        <BUILD_BUB                  build="YES" description=":: build support for BUB component"/>
+        <BUILD_BUB_UNIT_TEST        build="NO"  description=":: build support for unit test of BUB component"/>
+        <BUILD_LOCATION_SERVICES    build="YES" description=":: build support for location services component"/>
+        <BUILD_C_TCU_HW             build="NO"  description=":: build support for hardware in C_TCU project"/>
+        <BUILD_HIGH                 build="NO"  description=":: build support for Telematics High hardware"/>
+        <BUILD_AUDIO_MANAGER        build="YES" description=":: build support for audio manager"/>
+        <BUILD_DYN_NVM_TEST         build="NO"  description=":: build support for dynamic NVM test"/>
+    </build>
+    <build id="vehicle_micro_bootloader">
+        <BUILD_DC                   build="NO"  description=":: build support for the debug console trace output (not available in bootloader)"/>
+        <BUILD_BOOT                 build="YES" description=":: build support for example bootloader (only enable in bootloader config)"/>
+        <BUILD_GNSS                 build="NO"  description=":: build option to include or not the GNSS in the FBL"/>
+        <BUILD_C_TCU_HW             build="NO"  description=":: build support for hardware in C_TCU project"/>
+    </build>
+</builds>

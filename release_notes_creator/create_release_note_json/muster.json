@@ -1,0 +1,38 @@
+{
+  "releasenote": {
+    "software_name_supplier": "ModemBSW (SWC / DK1)",
+    "software_part_number_vw": "887",
+    "software_name": "ModemBSW (SWC / DK1)",
+    "sw_version": "conmod-sa515m-cl43-3.3.300.0",
+    "number_release_note": "CONMOD_5_G_Vcl43-03.03.300.00_CW23.03.1",
+    "version": "cl43-3.3.300.0",
+    "date": "2023-01-16",
+    "list_changes_to_previous_release":[9099346,9194334,9110343],
+    "list_supplied_evidences":["Release notes","NAD Test Report","Traceability Report"]
+  },
+  "kpis": {
+    "software_requirements": 410,
+    "software_requirements_test": 362,
+    "software_requirements_fully_tested": 301,
+    "software_tests_faulty": 0,
+    "software_error_tickets": 0,
+    "open_tickets_total": 64,
+    "tickets_assigned": 61,
+    "tickets_a": 17,
+    "tickets_b": 32,
+    "tickets_c": 15,
+    "ressource_cpu_applicable": "100%",
+    "ressource_cpu_limit_release": "100%",
+    "ressource_cpu_measure_release": "1%",
+    "ressource_ram_applicable": "788,90 MB",
+    "ressource_ram_limit_release": "788,90 MB",
+    "ressource_ram_measure_release": "455,26 MB",
+    "ressource_rom_applicable": "452,98 MB",
+    "ressource_rom_limit_release": "452,98 MB",
+    "ressource_rom_measure_release": "364,68 MB",
+    "serious_difference": 0,
+    "considerable_difference": 67,
+    "marginal_difference": 171,
+    "no_or_slight_difference": "no figures collected"
+  }
+}

@@ -1,0 +1,83 @@
+{
+    "$schema": "./../../../src/delivery-manifest/delivery-manifest.schema.json",
+    "system": {
+        "manifest-version": "1.2.0"
+    },
+    "metadata": {
+        "id": "887",
+        "local-id": "Modem BSW",
+        "version": "NOT SET",
+        "oem-responsible": {
+            "brand": "CARIAD",
+            "department": "T1-72",
+            "person": "vahap.guel@cariad.technology"
+        },
+        "supplier": {
+            "enabled": true,
+            "id": "340806311",
+            "name": "Continental Automotive Technologies GmbH"
+        },
+        "procurement": {
+            "enabled": false,
+            "id": "",
+            "partnumber": "",
+            "name": ""
+        },
+        "delivery": {
+            "date": "NOT SET"
+        },
+        "independent-diagnostic-address": {
+            "enabled": false,
+            "partnumber": "",
+            "diagnosis-address": []
+        }
+    },
+    "content": [],
+    "non-mandatory-comment": "Items below only obligated when customer explicitly require it",
+    "storage": [
+        {
+            "uri": "",
+            "checksum": ""
+        }
+    ],
+    "dependencies": [
+        {
+            "id": "",
+            "version": "",
+            "local-id": ""
+        }
+    ],
+    "vehicle": [
+        {
+            "id": "",
+            "market": ""
+        }
+    ],
+    "build": {
+        "type": "",
+        "branch": "",
+        "commitid": "",
+        "iteration": "",
+        "name": "",
+        "description": "",
+        "hardware": "",
+        "cluster": ""
+    },
+    "test-results": [
+        {
+            "uri": "",
+            "checksum": ""
+        }
+    ],
+    "release-notes": [
+        {
+            "uri": "",
+            "checksum": ""
+        }
+    ],
+    "provider-defined": [
+        {
+            "provider-defined00": ""
+        }
+    ]
+}

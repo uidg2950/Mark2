@@ -1,0 +1,142 @@
+{
+  "template_version": "5.0",
+  "ESOSDK": [
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/sdk",
+      "destination": "/SDK/sdk",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    },
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/release",
+      "destination": "/SDK/release",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    }
+  ],
+  "METADATA": [
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/release/modem_qshrink.tar.gz",
+      "destination": "/${miscellaneous}/CONTINENTAL/additional/",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    },
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/Documents/Attachments/Default.cfg",
+      "destination": "/${miscellaneous}/CONTINENTAL/additional/",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    },
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/Documents/Attachments/default-qxdm5.dmc",
+      "destination": "/${miscellaneous}/CONTINENTAL/additional/",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    },
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/Doxygen",
+      "destination": "/DOC/SDK/Doxygen",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    },
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/Documents",
+      "destination": "/DOC/SDK/Documents",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    },
+    {
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "destination": "/${releasenotes}/CONTINENTAL/Qualcomm/",
+      "type": "file",
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/Documents/Qualcomm/ConMod_Telematics_Voice_Audio_Customisation_Guide.pdf"
+    },
+    {
+      "source": "/tp_sdk_conmod-sa515m-3.y_pkg/Documents/Flashing_Instruction_TCU_for_SDK_Release_3.1.611_mcfg.pdf",
+      "destination": "/${releasenotes}/CONTINENTAL",
+      "variants": [
+        "AU_ROW_NONE_DEV_UNIT",
+        "AU_ROW_NONE_PROD_UNIT",
+        "PO_ROW_NONE_DEV_UNIT",
+        "PO_ROW_NONE_PROD_UNIT",
+        "VWN_ROW_MEB_DEV_UNIT",
+        "VWN_ROW_MEB_PROD_UNIT",
+        "VW_ROW_MEB_DEV_UNIT",
+        "VW_ROW_MEB_PROD_UNIT"
+      ],
+      "type": "file"
+    }
+  ]
+}
