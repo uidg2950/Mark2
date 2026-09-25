@@ -17,6 +17,8 @@
 
 import logging
 import argparse
+import os
+import glob
 from pathlib import Path
 from calculate_conti_ivd import calculate_ivd
 
@@ -48,10 +50,11 @@ def _parse_args():
         default="conmod-sa515m-3.y"
     )
     parsed_args = parser.parse_args()
-    manufacturing_package_dir = parsed_args.workspace + "/conti/unzipped/tp_sdk_" + parsed_args.release_id +"_pkg/release/images/devel/4K"
+    lookup_pattern = os.path.join( parsed_args.workspace, "conti", "unzipped", "tp_sdk_*_pkg")
+    manufacturing_package_dir = glob.glob(lookup_pattern)
 
     return {
-        'manufacturing_package_crc': Path(manufacturing_package_dir+"/image_crc_versions.csv"),
+        'manufacturing_package_crc': Path(manufacturing_package_dir[0] + "/release/images/devel/4K/image_crc_versions.csv"),
         'eso_crc': next(Path(parsed_args.workspace).glob("unpacked_eso/*/images/image_crc_versions.csv")),
         'swdl_blocks_json': Path(parsed_args.workspace + "/.launchers/conmod-cm/delivery/swdl_blocks.json")
     }

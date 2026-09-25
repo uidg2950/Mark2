@@ -65,7 +65,7 @@ def get_metainfo(source_path, release_id = "conmod-sa515m-3.y/", ret_as_text=Fal
 def download_artifact(source_path, destination_path, release_id = "conmod-sa515m-3.y/"):
   download_url = build_url(source_path, release_id)
   print("download_artifact: [{}] from to [{}]".format(download_url, destination_path))
-  with artifactory_session.get(download_url) as download_request:
+  with artifactory_session.get(download_url, verify = False) as download_request:
     with open(destination_path, 'wb') as output_file:
       output_file.write(download_request.content)
 

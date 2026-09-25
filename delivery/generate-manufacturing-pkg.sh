@@ -85,7 +85,14 @@ main() {
     then
       manufacturing_package_dir="/u01/app/jenkins/documents/sdk_packages/${BASELINE_VERSION}-${BUILD_SUFFIX}-manufacturing"
     fi
-    local pkg_dir="tp_sdk_${RELEASE_ID}_pkg"
+
+    mkdir -p ${WORKSPACE}/conti/sdk
+    local sdk_bundle_zip=$(find ${WORKSPACE}/conti -maxdepth 1 -type f -name '*.zip')
+
+    unzip ${sdk_bundle_zip} -d ${WORKSPACE}/conti/sdk
+
+    local matches=( "${WORKSPACE}/conti/sdk/tp_sdk_"*"_pkg" )
+    local pkg_dir="$(basename "${matches}")"
     local release_subpath="${pkg_dir}/release/images/devel/4K"
     local eso_unpacked="${WORKSPACE}/unpacked_eso"
     local release_pkg="${BASELINE_VERSION}-manufacturing-pkg.zip"
@@ -95,10 +102,7 @@ main() {
     unzip "${eso_pkg}" -d ${eso_unpacked}
     mkdir -p ${WORKSPACE}/conti/unzipped/${pkg_dir}/release/images/devel
     mkdir -p ${WORKSPACE}/conti/unzipped/${pkg_dir}/release/docs
-    mkdir -p ${WORKSPACE}/conti/sdk
-    local sdk_bundle_zip=$(find ${WORKSPACE}/conti -maxdepth 1 -type f -name '*.zip')
 
-    unzip ${sdk_bundle_zip} -d ${WORKSPACE}/conti/sdk
     cp -ra ${WORKSPACE}/conti/sdk/${pkg_dir}/release/docs/* ${WORKSPACE}/conti/unzipped/${pkg_dir}/release/docs
     cp ${WORKSPACE}/conti/sdk/${pkg_dir}/sdk/otc-signed.txt ${WORKSPACE}/conti/unzipped/${pkg_dir}/release/docs/
 

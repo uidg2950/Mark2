@@ -74,6 +74,8 @@ file_list_sdkc=(
     'on_device_logging_mask.cfg'
     'qxdm_logging.ini'
     'target_logging_setup.py'
+    'diag_logger.py'
+    'Default.cfg'
 )
 
 # Empty directories to be created

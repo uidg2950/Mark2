@@ -30,6 +30,8 @@ elfscan_files=( "about_report.json" "depends.json" "elf_report.json" "foss.csv" 
 fetch_cbins_output="${WORKSPACE}/fetch_cbins_output.tar.gz"
 elfscan_files_output="${WORKSPACE}/elfscan_files_output.tar.gz"
 osrb_bundle_tar="${WORKSPACE}/release_for_osrb.tar.gz"
+pckg_info="${WORKSPACE}/release/docs/package-info.txt"
+pckg_size="${WORKSPACE}/release/metrics/pkg-size.txt"
 # shared drive variables
 RGB_SHARED_DRIVE="//automotive-wan.com/root/smt/did01665/ConMod/18_Software_builds_AudiConMod"
 MOUNTING_DIR="${WORKSPACE}/conmod_shared_drive"
@@ -113,6 +115,12 @@ cp -pv "${fetch_cbins_output}" "${FOSS_STAGING_DIR}/${BASELINE_NAME}"
 RET_CODE=$((RET_CODE + $?))
 # copying elfscan
 cp -pv "${elfscan_files_output}" "${FOSS_STAGING_DIR}/${BASELINE_NAME}"
+RET_CODE=$((RET_CODE + $?))
+# copying package-info
+cp -pv "${pckg_info}" "${FOSS_STAGING_DIR}/${BASELINE_NAME}"
+RET_CODE=$((RET_CODE + $?))
+# copying pkg.size
+cp -pv "${pckg_size}" "${FOSS_STAGING_DIR}/${BASELINE_NAME}"
 RET_CODE=$((RET_CODE + $?))
 [[ ${RET_CODE} -ne 0 ]] && bail "Copying artifacts failed"
 

@@ -1,5 +1,6 @@
 #!/bin/bash
 # ******************************************************************************
+# *   Copyright 2026 AUMOVIO. All rights reserved.
 # *   Copyright (c) 2024 Continental Automotive Systems, Inc., all rights reserved
 # *   All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
 # *   Any reproduction of this material without written consent from
@@ -28,9 +29,14 @@ RELEASE_ID=${3?release_id is required}
 # space seperated list of bundle IDs, e.g. "X641 X646"
 SWL_DOWNLOAD_BUNDLES=${4?swl_download_bundles is required}
 FLAVOR=${5}
+OTC_VERSION=${6}
 
 if [[ "$FLAVOR" == "" ]]; then
    FLAVOR="devel"
+fi
+
+if [[ "$OTC_VERSION" == "" || "$OTC_VERSION" == "-" || "$OTC_VERSION" == "no" ]]; then
+   OTC_VERSION="NO"
 fi
 
 # Script variables
@@ -145,8 +151,15 @@ prepare_workarea() {
   header2 "Download SDK and extract SDK"
   echo "> mkdir '${STAGIN_DIR}'"
   mkdir "${STAGIN_DIR}"
-  echo "> download_artifacts '${WORKSPACE}' '${RELEASE_ID}' '${BASELINE_NAME}/sdk' '${PKG_ZIP}'"
-  download_artifacts "${WORKSPACE}" "${RELEASE_ID}" "${BASELINE_NAME}/sdk" "${PKG_ZIP}"
+
+  if [[ "$OTC_VERSION" == "NO" ]]; then
+    echo "> download_artifacts '${WORKSPACE}' '${RELEASE_ID}' '${BASELINE_NAME}/sdk' '${PKG_ZIP}'"
+    download_artifacts "${WORKSPACE}" "${RELEASE_ID}" "${BASELINE_NAME}/sdk" "${PKG_ZIP}"
+  else
+    echo "> download_artifacts '${WORKSPACE}' '${RELEASE_ID}' '${BASELINE_NAME}/otc' '${PKG_ZIP}'"
+    download_artifacts "${WORKSPACE}" "${RELEASE_ID}" "${BASELINE_NAME}/otc" "${PKG_ZIP}"
+  fi
+
   echo "> unzip ${WORKSPACE}/${PKG_ZIP} -d ${STAGIN_DIR}"
   unzip ${WORKSPACE}/${PKG_ZIP} -d ${STAGIN_DIR}
   [[ $? -ne 0 ]] && bail "Unable to unzip ${PKG_ZIP}"
@@ -282,6 +295,11 @@ do
 
   # Path verification
   [[ ! -d "${GENERATE_IMAGES_DIR}" ]] && bail "Unable to access to ${GENERATE_IMAGES_DIR}"
+
+  if [[ "$OTC_VERSION" != "NO" ]]; then
+    echo "Skips file generation due to OTC version"
+    continue
+  fi
 
   #e)Prepare zip bundle - Taking the latest in the shared drive
   download_artifacts "${WORKSPACE}" "${SWL_RELEASES}" "${ESO_RELEASE}" "${SWL_BUNDLE_NAME}"

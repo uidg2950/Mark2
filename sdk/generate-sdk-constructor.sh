@@ -17,7 +17,6 @@ BUILD_DIR=".build"
 ENV_BUILDSYS_FILE="${BUILD_DIR}/env-buildsys-static"
 ENV_COMMON_FILE="${BUILD_DIR}/env-common"
 MANIFESTS_DIR=".repo/manifests"
-PACKAGE_INFO_FILE="${SDK_WORKSPACE}/release/docs/package-info.txt"
 ENV_OVERWRITE_FILE="${WORKSPACE}/.launchers/conmod-cm/sdk/sdkc/env-overwrite"
 
 init_workarea() {
@@ -117,6 +116,7 @@ copy_images() {
     header3 "replacing package-info.txt file"
     # package-info.txt file generated through the sdk-constructor pipeline has some lacks
     # due the environment used for generate this.
+    PACKAGE_INFO_FILE="${SDK_WORKSPACE}/release/docs/package-info.txt"
     if [[ -f "${PACKAGE_INFO_FILE}" ]]; then
        echo "> replacing package-info.txt file"
        echo "cp ${PACKAGE_INFO_FILE} ${SDK_WORKSPACE}/release/docs/"

@@ -149,34 +149,61 @@ def get_kpis_from_excel(baseline_version, path=str, sheetname=str, key_value_cel
     # Identifying correct column
     results_wb = wb[sheetname]
 
-    # filters for clusters, "N/A" is applicable to both
-    cluster_value = "CL_43" if "cl43" in baseline_version else "CL_45"
-    row_values = [ cluster_value, "N/A"]
-    rv = []
-    print("Filters for cluster: {}".format(row_values))
+    # Filters for clusters, "N/A" is Default Value
+    row_values = [ "N/A" ]
+    cluster_value = ""
+    # Conmod_Cluster value definition
+    # WARNING: This must be updated continuously with the Conmod_Cluster labels
+    # defined into the Traceability_reports & Testcase_Execution_Report
+    if re.search("3.9", baseline_version):
+        cluster_value = "CL_8.21"
+    elif re.search("3.8",baseline_version):
+        cluster_value = "CL_8.12"
+    elif re.search("3.7",baseline_version):
+        cluster_value = "CL_8.11"
+    elif re.search("cl46r3",baseline_version):
+        cluster_value = "CL_6ext"
+    elif re.search("cl46",baseline_version):
+        cluster_value = "CL_46"
+    elif re.search("cl43",baseline_version):
+        cluster_value = "CL_43"
+    else:
+        print("Only Default Cluster Value N/A will be used")
 
+    if cluster_value:
+        print("Conmod_Cluster -> {}".format(cluster_value))
+        row_values.append(cluster_value)
+
+    print("Filters for Cluster: {}".format(row_values))
+
+    rv = []                                             # (List of) Row values = rv
     for value in row_values:
         for row in results_wb.rows:
             for t in row:
                 if t.value == value:                                   # i.e. <Cell 'SyRD TC Conmod_Cluster Summary'.B3>
                     val_in_row = str(t)
                     val_in_row = re.sub(r"[\<\>]", "", val_in_row)     # i.e. SyRD TC Conmod_Cluster Summary.B3
-                    rv.append(val_in_row.split(".")[1][1])             # row value = rv
+                    rv.append(val_in_row.split(".")[1][1:])
 
     for key, column in key_value_cell_for_release_note.items():
-        for row in results_wb.rows:                     # listing all rows
+        tr = []                                         # Total result
+        for row in results_wb.rows:                     # Listing all rows
             for t in row:
                 if t.value == column:
-                    cv = str(t)                         # column value = cv
+                    cv = str(t)                         # Column value = cv
                     cv = re.sub(r"[\<\>]", "", cv)
                     cv = cv.split(".")[1][0]
-                    key_value_cell_for_release_note[key] = (cv + rv[0], cv + rv[1])
+                    for r in rv:                        # (r) row to be concatenated with column value
+                        tr.append(cv + r)
+                    key_value_cell_for_release_note[key] = tr
 
     check_sheetname_in_excel(wb, sheetname, latest_file)
 
     sheet = wb[sheetname]
     for key, value in key_value_cell_for_release_note.items():
-        total_value = int(sheet[value[0]].value + sheet[value[1]].value)
+        total_value = 0
+        for v in value:
+            total_value += sheet[v].value
         release_note["kpis"].update({key: total_value})
 
     if os.name == "posix":

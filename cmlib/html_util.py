@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # *****************************************************************************
 # *
+# *  Copyright 2026 AUMOVIO. All rights reserved.
 # *  (c) 2024-2025 Continental Automotive Systems, Inc., all rights reserved
 # *
 # *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
@@ -18,7 +19,7 @@ import re
 import os
 
 # hardcoded Gerrit server link. Only used to create the html links inside the resulting Email:
-gerrit_host = "buic-scm-dpk.contiwan.com:8443"
+gerrit_host = "buic-scm-dpk.automotive-wan.com:8443"
 # list of repos, for which entries will be skipped:
 repo_skip_list = [ "p1/project/otp-framework/manifest", "p1/project/otp-hal/manifest"]
 
@@ -68,7 +69,7 @@ def create_ticket_link(jiraticket):
     Returns:
         str: jira_link, the resulting link to Jira
     """
-    jira_link = "https://jira.vni.agileci.conti.de/browse/{}".format(jiraticket)
+    jira_link = "https://ix.jira.automotive.cloud/browse/{}".format(jiraticket)
     return jira_link
 
 def create_url_for_repo_field(gerrit_host, repo):

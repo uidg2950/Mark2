@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # ******************************************************************************
 # *
+# *  Copyright 2026 AUMOVIO. All rights reserved.
 # *  (c) 2022-2024 Continental Automotive Systems, Inc., all rights reserved
 # *
 # *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
@@ -194,8 +195,40 @@ download_artifacts(){
 
     pushd "${workspace}"
         for file in "${files[@]}"; do
-            echo "curl -u 'TOKEN' -O '${artifactory_url}/${file}'"
-            curl -u "${token}" -O "${artifactory_url}/${file}"
+            echo "curl -L -u 'TOKEN' -O '${artifactory_url}/${file}'"
+            curl -L -u "${token}" -O "${artifactory_url}/${file}"
+        done
+    popd
+
+    return "$?"
+}
+
+
+# download raw file from artifactory with credentials under any repository
+raw_download(){
+    local workspace=${1?workspace is required}
+    local LOCAL_REPOSITORY=${2?release_id is required}
+    local folder_path=${3?baseline is required}
+    local files=${4?files is required}
+
+    local artifactory_url="${ARTIFACTORY_SERVER}/${LOCAL_REPOSITORY}/${folder_path}/"
+
+    # Settings
+    ret_code=0
+    max_retries=3
+
+    # Action
+    token=$(read_artifactory_credentials)
+
+    if [[ -z "${token}" ]]; then
+        echo "Unable to retrieve authentication token"
+        return 13
+    fi
+
+    pushd "${workspace}"
+        for file in "${files[@]}"; do
+            echo "curl -L -u 'TOKEN' -O '${artifactory_url}/${file}'"
+            curl -L -u "${token}" -O "${artifactory_url}/${file}"
         done
     popd
 

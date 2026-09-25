@@ -1,7 +1,7 @@
 #!/bin/bash
 # *****************************************************************************
 # *
-# *  (c) 2021-2024 Continental Automotive Systems, Inc., all rights reserved
+# *  (c) 2021-2026 Aumovio Inc, all rights reserved
 # *
 # *  All material contained herein is CONTINENTAL CONFIDENTIAL and PROPRIETARY.
 # *  Any reproduction of this material without written consent from
@@ -318,11 +318,24 @@ update_bundle() {
   RET_CODE=$((RET_CODE + $?))
   [[ ${RET_CODE} -ne 0 ]] && bail "Unable to create ${OTC_CONTI_SIGNED} dir"
 
+  # Creating label file
   local SIGNED_MARK_FILE="${OTC_DEST}/otc-signed.txt"
   echo "> Creating label file ${SIGNED_MARK_FILE}"
   echo "'conti-signed-images.tar.gz' signed with Continental OTC keys on $(date)" > ${SIGNED_MARK_FILE}
-
   RET_CODE=$((RET_CODE + $?))
+
+  # Adding MD5 checksum information
+  echo "> Adding MD5SUM information into ${SIGNED_MARK_FILE}"
+  mkdir ${WORKSPACE}/check_otc_tar
+  tar -xzf ${OTC_CONTI_SIGNED} -C ${WORKSPACE}/check_otc_tar/
+  RET_CODE=$((RET_CODE + $?))
+  echo -e "\n" >> ${SIGNED_MARK_FILE}
+  echo -e "(128-bit)Checksum\t\tFilename" >> ${SIGNED_MARK_FILE}
+  pushd "${WORKSPACE}/check_otc_tar" > /dev/null
+      images=( $(ls) )
+      for binary in ${images[@]};do md5sum ${binary} >> ${SIGNED_MARK_FILE}; done
+  popd &> /dev/null
+
   [[ ${RET_CODE} -ne 0 ]] && bail "Unable to create ${SIGNED_MARK_FILE} file"
 
   header2 "Updating tp_sdk_${BASELINE_VERSION}_pkg.zip file"

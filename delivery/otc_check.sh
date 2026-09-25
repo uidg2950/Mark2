@@ -17,8 +17,8 @@
 SCRIPT_NAME=$(basename "${BASH_SOURCE[0]}")
 # OTCConnect artfifactory link
 OTC_CONNECT_ARTIF="https://eu.artifactory.automotive.cloud/artifactory/ait_catch_generic_l/releases/OTConnect"
-OTC_CONNECT_MAJOR_VERSION="14.0"
-OTC_CONNECT_MINOR_VERSION="598"
+OTC_CONNECT_MAJOR_VERSION="16.0"
+OTC_CONNECT_MINOR_VERSION="10"
 OTC_CONNECT_FILENAME="OTConnect-${OTC_CONNECT_MAJOR_VERSION}-${OTC_CONNECT_MINOR_VERSION}.zip"
 OTC_CONNECT_FULL_URL="${OTC_CONNECT_ARTIF}/${OTC_CONNECT_MAJOR_VERSION}/${OTC_CONNECT_FILENAME}"
 # FIXME:  This value should be updated in ~/.credentials/artifactory (9.4.2026)

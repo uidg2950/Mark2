@@ -130,7 +130,10 @@ for file_name in "${file_list_sdkc[@]}" ;do
     fi
 done
 [[ ${RET_CODE} -ne 0 ]] && bail "Failed to compress ${FILE_LIST}"
+
+# Checking counting of included files. As for today 6.8.2026, count should be equal to 56
 echo "Number of found files:${counter}"
+(( ${counter} < 56 )) && bail "The number of found files is not correct - expected count=56"
 
 # Dirs for Signing Capabilities
 if [[ ${RELEASE_ID} =~ sa515m ]];then
